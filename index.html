@@ -3,912 +3,202 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#17191b">
-<title>BTS TP Pilot V3</title>
+<meta name="theme-color" content="#16181a">
+<title>BTS TP Pilot V4</title>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="./logo-bts-tp-pilot.png">
+<link rel="apple-touch-icon" href="./logo-bts-tp-pilot.png">
 <style>
-:root{
-  --bg:#16181a;--panel:#23272a;--panel2:#2e3337;--line:#3a4044;
-  --txt:#f5f7f8;--muted:#aeb5ba;--accent:#dfff00;--danger:#ff6b6b;--ok:#9ee493;--warn:#ffd166;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,input,select,textarea{font:inherit}
-.app{max-width:1200px;margin:auto;padding:16px 16px 92px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
-h1,h2,h3{margin-top:0}
-.brand h1{margin-bottom:4px}
-.accent{color:var(--accent)}
-.muted{color:var(--muted)}
-.pill{background:var(--accent);color:#111;padding:8px 12px;border-radius:999px;font-weight:900}
-.tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
-.tab{border:1px solid var(--line);background:var(--panel);color:var(--txt);padding:11px;border-radius:12px;cursor:pointer}
-.tab.active{background:var(--accent);color:#111;font-weight:900}
-.view{display:none}.view.active{display:block}
-.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
-.span4{grid-column:span 4}.span5{grid-column:span 5}.span6{grid-column:span 6}.span7{grid-column:span 7}.span8{grid-column:span 8}.span12{grid-column:span 12}
-.progress{height:10px;background:#0f1112;border-radius:999px;overflow:hidden}
-.progress span{display:block;height:100%;background:var(--accent)}
-.metric{font-size:34px;font-weight:900}
-.slot{padding:14px;background:var(--panel2);border-left:5px solid var(--accent);border-radius:12px;margin-bottom:10px}
-.tag{display:inline-block;padding:4px 7px;border-radius:999px;background:#111315;border:1px solid var(--line);font-size:12px;margin-right:5px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.btn{border:0;border-radius:10px;padding:10px 13px;cursor:pointer;font-weight:800;background:var(--accent);color:#111}
-.btn.secondary{background:var(--panel2);color:var(--txt);border:1px solid var(--line)}
-.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
-.btn.danger{background:var(--danger);color:#111}
-input,select,textarea{width:100%;background:#111315;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px}
-label{display:block;margin:10px 0 5px;color:var(--muted);font-size:13px}
-textarea{min-height:280px;resize:vertical}
-table{width:100%;border-collapse:collapse}
-th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--accent)}
-.notice{background:#111315;border:1px solid #505700;border-radius:14px;padding:13px;color:#eef7b0}
-.status.done{color:var(--ok);font-weight:800}.status.partial{color:var(--warn);font-weight:800}.status.todo{color:var(--muted);font-weight:800}
-.yearcard{padding:14px;border:1px solid var(--line);border-radius:14px;background:#1c1f21;margin-bottom:10px}
-.yearcard.active{border-color:var(--accent)}
-.resource{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
-.footerbar{position:fixed;bottom:0;left:0;right:0;background:rgba(22,24,26,.95);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px}
-.footerbar .inner{max-width:1200px;margin:auto;display:flex;justify-content:space-between}
-@media(max-width:900px){
-  .tabs{grid-template-columns:repeat(3,1fr)}
-  .span4,.span5,.span6,.span7,.span8{grid-column:span 12}
-  .top{align-items:flex-start;flex-direction:column}
-}
-
-.drive-status{display:flex;align-items:center;gap:8px;margin:10px 0}
-.dot{width:10px;height:10px;border-radius:50%;background:var(--danger);display:inline-block}
-.dot.ok{background:var(--ok)}
-.searchbar{display:grid;grid-template-columns:1fr 180px auto;gap:8px;margin:12px 0}
-.result{padding:12px;background:#1c1f21;border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
-.result-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-.path{font-size:12px;color:var(--muted);margin-top:4px;word-break:break-word}
-.source-badge{background:#111315;border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:3px 7px;font-size:11px;font-weight:800}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
-.chip{background:#111315;border:1px solid var(--line);color:var(--txt);padding:6px 9px;border-radius:999px;cursor:pointer}
-.chip:hover{border-color:var(--accent)}
-.source-row{display:grid;grid-template-columns:1fr 180px auto;gap:8px;align-items:end;margin-bottom:10px}
-@media(max-width:900px){.searchbar,.source-row{grid-template-columns:1fr}}
-
-
-.logo-wrap{display:flex;align-items:center;gap:14px}
-.app-logo{
-  width:68px;height:68px;border-radius:18px;object-fit:cover;
-  box-shadow:0 8px 24px rgba(223,255,0,.18);
-  border:1px solid rgba(255,255,255,.08)
-}
-.brandline{display:flex;flex-direction:column}
-.brand-kicker{font-size:12px;text-transform:uppercase;letter-spacing:1.3px;color:var(--muted)}
-.splash-logo{width:120px;height:120px;border-radius:28px;object-fit:cover;display:block;margin:0 auto 16px}
-
+:root{--bg:#151719;--panel:#222629;--panel2:#2d3236;--line:#3b4146;--txt:#f6f7f7;--muted:#adb5ba;--accent:#dfff00;--ok:#9ee493;--warn:#ffd166;--danger:#ff7070}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}.app{max-width:1280px;margin:auto;padding:15px 15px 92px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:15px}.logoWrap{display:flex;gap:13px;align-items:center}.logo{width:68px;height:68px;border-radius:18px;object-fit:cover;border:1px solid #555;box-shadow:0 8px 22px rgba(223,255,0,.13)}
+h1,h2,h3{margin-top:0}.brand h1{margin:0}.kicker{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted)}.accent{color:var(--accent)}.muted{color:var(--muted)}
+.pill{background:var(--accent);color:#101214;padding:8px 12px;border-radius:999px;font-weight:900;white-space:nowrap}
+.tabs{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;margin:12px 0 16px}.tab{border:1px solid var(--line);background:var(--panel);color:var(--txt);padding:11px 8px;border-radius:11px;cursor:pointer}.tab.active{background:var(--accent);color:#111;font-weight:900}
+.view{display:none}.view.active{display:block}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:13px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}.span4{grid-column:span 4}.span5{grid-column:span 5}.span6{grid-column:span 6}.span7{grid-column:span 7}.span8{grid-column:span 8}.span12{grid-column:span 12}
+.metric{font-size:34px;font-weight:950}.progress{height:10px;background:#0e1011;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;background:var(--accent)}
+.slot{padding:14px;background:var(--panel2);border-left:5px solid var(--accent);border-radius:12px;margin-bottom:10px}.slot.done{border-left-color:var(--ok)}.slot.partial{border-left-color:var(--warn)}
+.tag{display:inline-block;padding:4px 7px;border-radius:999px;background:#101214;border:1px solid var(--line);font-size:12px;margin:0 5px 4px 0}.tag.accentTag{border-color:var(--accent);color:var(--accent)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.btn{border:0;border-radius:10px;padding:10px 13px;cursor:pointer;font-weight:850;background:var(--accent);color:#101214}.btn.secondary{background:var(--panel2);color:var(--txt);border:1px solid var(--line)}.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}.btn.danger{background:var(--danger);color:#111}.btn.small{padding:7px 9px;font-size:13px}
+input,select,textarea{width:100%;background:#101214;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px}label{display:block;margin:10px 0 5px;color:var(--muted);font-size:13px}textarea{min-height:260px;resize:vertical}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--accent);position:sticky;top:0;background:var(--panel);z-index:1}.tableWrap{overflow:auto;max-height:650px}
+.notice{background:#101214;border:1px solid #586100;border-radius:13px;padding:12px;color:#eff7bb}.warning{border-color:#745d19;color:#ffe5a4}.status.done{color:var(--ok);font-weight:850}.status.partial{color:var(--warn);font-weight:850}.status.postponed{color:#f1a3ff;font-weight:850}.status.todo{color:var(--muted);font-weight:850}
+.refGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.ref{padding:12px;border:1px solid var(--line);border-radius:12px;background:#1b1e20}
+.drive-status{display:flex;align-items:center;gap:8px;margin:10px 0}.dot{width:10px;height:10px;border-radius:50%;background:var(--danger)}.dot.ok{background:var(--ok)}.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.chip{background:#101214;border:1px solid var(--line);color:var(--txt);padding:6px 9px;border-radius:999px;cursor:pointer}.chip:hover{border-color:var(--accent)}
+.searchbar{display:grid;grid-template-columns:1fr 190px auto;gap:8px;margin:12px 0}.result{padding:12px;background:#1b1e20;border:1px solid var(--line);border-radius:12px;margin-bottom:8px}.resultTop{display:flex;justify-content:space-between;gap:12px}.path{font-size:12px;color:var(--muted);margin-top:4px;word-break:break-word}.sourceBadge{background:#101214;border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:3px 7px;font-size:11px;font-weight:850;white-space:nowrap}
+.footer{position:fixed;bottom:0;left:0;right:0;background:rgba(21,23,25,.95);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:9px}.footerInner{max-width:1280px;margin:auto;display:flex;justify-content:space-between;gap:10px}
+@media(max-width:950px){.tabs{grid-template-columns:repeat(4,1fr)}.span4,.span5,.span6,.span7,.span8{grid-column:span 12}.top{align-items:flex-start;flex-direction:column}.refGrid{grid-template-columns:1fr}.searchbar{grid-template-columns:1fr}.tableWrap{max-height:none}}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="top">
-    <div class="logo-wrap">
-      <img src="./logo-bts-tp-pilot.png" alt="Logo BTS TP Pilot" class="app-logo">
-      <div class="brand brandline">
-        <div class="brand-kicker">Travaux Publics</div>
-        <h1>BTS TP <span class="accent">PILOT V3</span></h1>
-        <div class="muted">Assistant pédagogique sur 2 ans — promotions, progression, Drive, Classroom</div>
-      </div>
-    </div>
-    <div id="cohortPill" class="pill">Chargement…</div>
-  </div>
+<header class="top">
+<div class="logoWrap"><img class="logo" src="./logo-bts-tp-pilot.png" alt="Logo BTS TP Pilot"><div class="brand"><div class="kicker">Travaux publics · pilotage pédagogique</div><h1>BTS TP <span class="accent">PILOT V4</span></h1><div class="muted">Progression 2 ans · planning CFA · référentiel · Drive · Classroom</div></div></div>
+<div id="cohortPill" class="pill">Chargement…</div>
+</header>
 
-  <div class="tabs">
-    <button class="tab active" data-view="home">Aujourd’hui</button>
-    <button class="tab" data-view="week">Semaine</button>
-    <button class="tab" data-view="promotions">Promotions</button>
-    <button class="tab" data-view="progression">Progression</button>
-    <button class="tab" data-view="drive">Drive</button>
-    <button class="tab" data-view="generator">Générer</button>
-    <button class="tab" data-view="settings">Paramètres</button>
-  </div>
+<nav class="tabs">
+<button class="tab active" data-view="home">Aujourd’hui</button><button class="tab" data-view="week">Ma semaine</button><button class="tab" data-view="plan">Plan 2 ans</button><button class="tab" data-view="promos">Promotions</button><button class="tab" data-view="referential">Référentiel</button><button class="tab" data-view="drive">Drive</button><button class="tab" data-view="generator">Générer</button><button class="tab" data-view="settings">Paramètres</button>
+</nav>
 
-  <section id="home" class="view active">
-    <div class="card" style="margin-bottom:14px;text-align:center">
-      <img src="./logo-bts-tp-pilot.png" alt="BTS TP Pilot" class="splash-logo">
-      <strong style="font-size:20px">BTS TP Pilot</strong>
-      <div class="muted">Pilotage pédagogique • progression • Drive • Classroom</div>
-    </div>
-    <div class="grid">
-      <div class="card span8">
-        <h2 id="todayTitle">Aujourd’hui</h2>
-        <div id="todayContent"></div>
-      </div>
-      <div class="card span4">
-        <h3>Avancement année en cours</h3>
-        <div class="metric" id="currentYearProgress">0%</div>
-        <div class="progress"><span id="currentYearBar" style="width:0%"></span></div>
-        <p class="muted" id="currentYearLabel"></p>
-      </div>
-      <div class="card span6">
-        <h3>À préparer</h3>
-        <div id="prepList"></div>
-      </div>
-      <div class="card span6">
-        <h3>Actions rapides</h3>
-        <div class="actions">
-          <button class="btn" onclick="showView('week')">Préparer ma semaine</button>
-          <button class="btn secondary" onclick="showView('promotions')">Voir les 2 années</button>
-          <button class="btn secondary" onclick="openDrive()">Drive BTS andy</button>
-          <button class="btn secondary" onclick="openClassroom()">Classroom</button>
-          <button class="btn secondary" onclick="showView('generator')">Générer progression</button>
-        </div>
-      </div>
-    </div>
-  </section>
+<section id="home" class="view active"><div class="grid">
+<div class="card span8"><h2 id="todayTitle"></h2><div id="todayState"></div><div id="todaySession"></div></div>
+<div class="card span4"><h3>Avancement de la promotion</h3><div class="metric" id="promoProgress">0%</div><div class="progress"><span id="promoBar"></span></div><p id="promoProgressText" class="muted"></p></div>
+<div class="card span6"><h3>Prochaines séances</h3><div id="nextSessions"></div></div>
+<div class="card span6"><h3>Alertes pédagogiques</h3><div id="pedAlerts"></div></div>
+</div></section>
 
-  <section id="week" class="view">
-    <div class="card">
-      <h2>Semaine CFA</h2>
-      <p class="muted">Mardi U5 · Jeudi U8 · Vendredi U6 par défaut, échangeable avec U7.</p>
-      <div id="weekSchedule"></div>
-    </div>
-  </section>
+<section id="week" class="view"><div class="grid">
+<div class="card span8"><h2>Planification automatique</h2><p class="muted">Mardi U5, jeudi U8, vendredi U6/U7 selon la progression.</p><div id="weekSchedule"></div></div>
+<div class="card span4"><h3>Charge prochaine présence CFA</h3><div id="weekSummary"></div></div>
+</div></section>
 
-  <section id="promotions" class="view">
-    <div class="grid">
-      <div class="card span5">
-        <h2>Promotions</h2>
-        <div id="promotionList"></div>
-      </div>
-      <div class="card span7">
-        <h2>Parcours sur 2 ans</h2>
-        <div id="promotionDetails"></div>
-      </div>
-    </div>
-  </section>
+<section id="plan" class="view"><div class="card">
+<h2>Progression pédagogique sur 2 ans</h2>
+<div class="grid"><div class="span4"><label>Promotion</label><select id="planPromo" onchange="renderPlan()"></select></div><div class="span4"><label>Année</label><select id="planYear" onchange="renderPlan()"><option value="year1">1re année</option><option value="year2">2e année</option></select></div><div class="span4"><label>Filtre</label><select id="planUnit" onchange="renderPlan()"><option value="ALL">Tous</option><option>U5</option><option>U6</option><option>U7</option><option>U8</option></select></div></div>
+<div id="planStats" style="margin:12px 0"></div><div class="tableWrap" id="planTable"></div>
+</div></section>
 
-  <section id="progression" class="view">
-    <div class="grid">
-      <div class="card span8">
-        <h2>Progression détaillée</h2>
-        <label>Promotion</label>
-        <select id="progressCohort" onchange="renderProgression()"></select>
-        <label>Année</label>
-        <select id="progressYear" onchange="renderProgression()">
-          <option value="year1">1re année</option>
-          <option value="year2">2e année</option>
-        </select>
-        <div id="progressTableWrap"></div>
-      </div>
-      <div class="card span4">
-        <h3>Couverture par unité</h3>
-        <div id="unitBars"></div>
-      </div>
-    </div>
-  </section>
+<section id="promos" class="view"><div class="grid"><div class="card span5"><h2>Promotions</h2><div id="promoList"></div></div><div class="card span7"><h2>Parcours 2 ans</h2><div id="promoDetail"></div></div></div></section>
 
-  
-<section id="drive" class="view">
-  <div class="grid">
-    <div class="card span8">
-      <h2>Recherche Drive pédagogique</h2>
-      <div class="notice">
-        Source prioritaire : <strong>BTS andy</strong>. La recherche peut parcourir tout le Drive partagé et ses sous-dossiers.
-      </div>
+<section id="referential" class="view"><div class="grid"><div class="card span6"><h2>Blocs professionnels</h2><div id="unitReferential"></div></div><div class="card span6"><h2>Savoirs S1 à S10</h2><div id="knowledgeReferential"></div></div><div class="card span12"><h3>Couverture de la progression</h3><div id="coverage"></div></div></div></section>
 
-      <div class="drive-status">
-        <span id="driveDot" class="dot"></span>
-        <strong id="driveStatusText">Non connecté à Google Drive</strong>
-      </div>
+<section id="drive" class="view"><div class="grid">
+<div class="card span8"><h2>Recherche documentaire</h2><div class="notice">Priorité à <strong>BTS andy</strong>, puis ancien Drive. Recherche récursive dans les sous-dossiers.</div>
+<div class="drive-status"><span id="driveDot" class="dot"></span><strong id="driveStatus">Non connecté</strong></div>
+<div class="actions"><button class="btn" onclick="connectGoogleDrive()">Connexion Google Drive</button><button class="btn secondary" onclick="disconnectGoogleDrive()">Déconnexion</button><button class="btn secondary" onclick="openMainDrive()">Ouvrir BTS andy</button><button class="btn secondary" onclick="window.open('https://classroom.google.com/','_blank')">Classroom</button></div>
+<div class="chips"><button class="chip" onclick="quickSearch('topographie')">Topographie</button><button class="chip" onclick="quickSearch('terrassement')">Terrassement</button><button class="chip" onclick="quickSearch('assainissement')">Assainissement</button><button class="chip" onclick="quickSearch('laboratoire')">Laboratoire</button><button class="chip" onclick="quickSearch('chaussée')">Chaussées</button><button class="chip" onclick="quickSearch('réseaux')">Réseaux</button><button class="chip" onclick="quickSearch('béton')">Béton</button></div>
+<div class="searchbar"><input id="driveQuery" placeholder="Matière, projet ou document…"><select id="driveSource"></select><button class="btn" onclick="searchDrive()">Rechercher</button></div><div id="driveInfo" class="muted"></div><div id="driveResults"></div></div>
+<div class="card span4"><h3>Sources</h3><div id="driveSources"></div><label>OAuth Client ID Google</label><input id="oauthClientId" placeholder="xxxx.apps.googleusercontent.com"><button class="btn" style="margin-top:10px" onclick="saveOAuth()">Enregistrer</button><p class="muted">Accès Drive en lecture seule.</p></div>
+</div></section>
 
-      <div class="actions">
-        <button class="btn" onclick="connectGoogleDrive()">Se connecter à Google Drive</button>
-        <button class="btn secondary" onclick="disconnectGoogleDrive()">Déconnecter</button>
-        <button class="btn secondary" onclick="openDrive()">Ouvrir BTS andy</button>
-        <button class="btn secondary" onclick="openClassroom()">Classroom</button>
-      </div>
+<section id="generator" class="view"><div class="grid">
+<div class="card span4"><h2>Générer la progression</h2><label>Promotion</label><select id="genPromo"></select><label>Période</label><select id="genPeriod"><option value="two">Deux années</option><option value="year1">1re année</option><option value="year2">2e année</option></select><label>Unité</label><select id="genUnit"><option value="ALL">Toutes</option><option>U5</option><option>U6</option><option>U7</option><option>U8</option></select><label>Version</label><select id="genMode"><option value="full">Détaillée</option><option value="actual">Réalisée / en cours</option><option value="inspection">Synthèse inspection</option></select><div class="actions"><button class="btn" onclick="generateProgression()">Générer</button><button class="btn secondary" onclick="copyGenerated()">Copier pour Word</button></div></div>
+<div class="card span8"><h2>Texte généré</h2><textarea id="generatedText"></textarea></div>
+</div></section>
 
-      <h3 style="margin-top:18px">Recherche par matière / projet</h3>
-      <div class="chips">
-        <button class="chip" onclick="quickSearch('topographie')">Topographie</button>
-        <button class="chip" onclick="quickSearch('terrassement')">Terrassement</button>
-        <button class="chip" onclick="quickSearch('assainissement')">Assainissement</button>
-        <button class="chip" onclick="quickSearch('laboratoire')">Laboratoire</button>
-        <button class="chip" onclick="quickSearch('chaussée')">Chaussées</button>
-        <button class="chip" onclick="quickSearch('réseaux')">Réseaux</button>
-        <button class="chip" onclick="quickSearch('béton')">Béton</button>
-        <button class="chip" onclick="quickSearch('implantation')">Implantation</button>
-      </div>
-
-      <div class="searchbar">
-        <input id="driveSearchInput" placeholder="Ex. topographie, nivellement, terrassement, Lubersac...">
-        <select id="driveSearchSource"></select>
-        <button class="btn" onclick="searchDrive()">Rechercher</button>
-      </div>
-
-      <div id="driveSearchInfo" class="muted"></div>
-      <div id="driveSearchResults" style="margin-top:12px"></div>
-    </div>
-
-    <div class="card span4">
-      <h3>Sources Drive</h3>
-      <p class="muted">Tu peux rechercher dans plusieurs dossiers ou Drives. BTS andy reste prioritaire.</p>
-      <div id="driveSources"></div>
-
-      <label>Nom de la source</label>
-      <input id="newSourceName" placeholder="Ex. Ancien BTS">
-      <label>ID dossier / Drive partagé</label>
-      <input id="newSourceId" placeholder="ID Google Drive">
-      <button class="btn secondary" style="margin-top:10px" onclick="addDriveSource()">Ajouter une source</button>
-
-      <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
-      <label>OAuth Client ID Google</label>
-      <input id="oauthClientId" placeholder="xxxx.apps.googleusercontent.com">
-      <button class="btn" style="margin-top:10px" onclick="saveOAuthClient()">Enregistrer OAuth</button>
-      <p class="muted">Nécessaire pour que l’application hébergée sur GitHub Pages puisse rechercher dans tes fichiers privés.</p>
-    </div>
-  </div>
-</section>
-
-
-  <section id="generator" class="view">
-    <div class="grid">
-      <div class="card span4">
-        <h2>Générer une progression</h2>
-        <label>Promotion</label>
-        <select id="genCohort"></select>
-        <label>Période</label>
-        <select id="genPeriod">
-          <option value="twoYears">Deux années complètes</option>
-          <option value="year1">1re année seulement</option>
-          <option value="year2">2e année seulement</option>
-        </select>
-        <label>Contenu</label>
-        <select id="genFormat">
-          <option value="complete">Progression complète</option>
-          <option value="inspection">Synthèse inspection</option>
-          <option value="realisee">Réalisée uniquement</option>
-        </select>
-        <label>Filtrer par unité</label>
-        <select id="genUnit">
-          <option value="ALL">Toutes les unités</option>
-          <option>U5</option><option>U6</option><option>U7</option><option>U8</option>
-        </select>
-        <div class="actions">
-          <button class="btn" onclick="generateProgression()">Générer</button>
-          <button class="btn secondary" onclick="copyGenerated()">Copier pour Word</button>
-        </div>
-      </div>
-      <div class="card span8">
-        <h2>Document généré</h2>
-        <textarea id="generatedText"></textarea>
-      </div>
-    </div>
-  </section>
-
-  <section id="settings" class="view">
-    <div class="grid">
-      <div class="card span6">
-        <h2>Alternance</h2>
-        <label>Promotion au CFA pendant la quinzaine A</label>
-        <select id="cycleA"></select>
-        <label>Date de référence d’une quinzaine A</label>
-        <input id="cycleAnchor" type="date">
-        <label>Vendredi par défaut</label>
-        <select id="fridayDefault">
-          <option value="U6">U6 — journée complète</option>
-          <option value="U7">U7 — journée complète</option>
-        </select>
-        <button class="btn" style="margin-top:12px" onclick="saveSettings()">Enregistrer</button>
-      </div>
-      <div class="card span6">
-        <h2>Sauvegarde</h2>
-        <p class="muted">Les données restent dans le navigateur. Exporte une sauvegarde régulièrement.</p>
-        <div class="actions">
-          <button class="btn secondary" onclick="exportBackup()">Exporter JSON</button>
-          <label class="btn secondary" style="margin:0;cursor:pointer">Importer JSON
-            <input type="file" accept=".json" style="display:none" onchange="importBackup(event)">
-          </label>
-        </div>
-      </div>
-      <div class="card span12">
-        <h2>Fin de cycle</h2>
-        <p>La clôture archive les deux années complètes de la promotion. Rien n’est perdu : la progression reste générable à tout moment depuis les archives.</p>
-        <label>Promotion à clôturer</label>
-        <select id="archiveCohort"></select>
-        <div class="actions">
-          <button class="btn" onclick="archivePromotion()">Clôturer et archiver</button>
-          <button class="btn danger" onclick="hardResetPromotion()">Effacer le suivi sans archive</button>
-        </div>
-        <div id="archiveInfo" class="muted" style="margin-top:10px"></div>
-      </div>
-    </div>
-  </section>
+<section id="settings" class="view"><div class="grid">
+<div class="card span6"><h2>Alternance et calendrier</h2><label>Promotion pendant quinzaine A</label><select id="cycleA"></select><label>Date de référence quinzaine A</label><input id="cycleAnchor" type="date"><label>Vacances Zone A</label><select id="holidayMode"><option value="on">Prises en compte</option><option value="off">Ignorées</option></select><button class="btn" style="margin-top:10px" onclick="saveSettings()">Enregistrer</button></div>
+<div class="card span6"><h2>Sauvegarde</h2><div class="actions"><button class="btn secondary" onclick="exportBackup()">Exporter JSON</button><label class="btn secondary" style="margin:0;cursor:pointer">Importer JSON<input type="file" accept=".json" style="display:none" onchange="importBackup(event)"></label></div></div>
+<div class="card span12"><h2>Fin de cycle / nouvelle session</h2><div class="notice warning">La clôture archive les deux années avant de créer la nouvelle promotion.</div><label>Promotion sortante</label><select id="rollPromo"></select><div class="actions"><button class="btn" onclick="rollAcademicSession()">Clôturer + préparer nouvelle rentrée</button><button class="btn danger" onclick="resetTracking()">Réinitialiser le suivi</button></div><div id="archiveInfo" class="muted" style="margin-top:10px"></div></div>
+</div></section>
 </div>
 
-<div class="footerbar"><div class="inner"><span id="saveState" class="muted">Sauvegarde locale active</span><strong class="accent">BTS TP PILOT</strong></div></div>
+<div class="footer"><div class="footerInner"><span id="saveState" class="muted">Sauvegarde locale active</span><strong class="accent">BTS TP PILOT V4</strong></div></div>
 
 <script>
-const DRIVE_DEFAULT_ID="0AJGPXCEfotQeUk9PVA";
-
-const year1Model=[
- {id:"y1-1",unit:"U5",title:"Lecture et analyse d’un dossier TP",topic:"dossier travaux publics",hours:4,status:"done",competence:"C2-1",knowledge:"Analyse d’ouvrage",drive:0},
- {id:"y1-2",unit:"U8",title:"Topographie — prise en main et mise en station",topic:"topographie mise en station",hours:4,status:"done",competence:"C4-1",knowledge:"S3 Topographie",drive:0},
- {id:"y1-3",unit:"U6",title:"Préparation de chantier — découverte du DCE",topic:"DCE préparation chantier",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Méthodes / pièces marché",drive:3},
- {id:"y1-4",unit:"U5",title:"Terrassements et profils",topic:"terrassement profils",hours:4,status:"done",competence:"C2-1",knowledge:"Terrassements",drive:0},
- {id:"y1-5",unit:"U8",title:"Laboratoire — identification des sols",topic:"laboratoire sols",hours:4,status:"done",competence:"C4-2",knowledge:"Sols / essais",drive:1},
- {id:"y1-6",unit:"U6",title:"Choix des engins et rendements",topic:"engins rendements terrassement",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Ressources et rendements",drive:3},
- {id:"y1-7",unit:"U5",title:"Chaussées — constitution et fonctions",topic:"chaussée",hours:4,status:"done",competence:"C2-1",knowledge:"Chaussées",drive:0},
- {id:"y1-8",unit:"U8",title:"Nivellement — cheminement",topic:"topographie nivellement",hours:4,status:"done",competence:"C4-1",knowledge:"S3.7 Nivellement",drive:0},
- {id:"y1-9",unit:"U6",title:"Installation de chantier et organisation",topic:"installation chantier",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Organisation",drive:0},
- {id:"y1-10",unit:"U7",title:"Communication et encadrement d’équipe",topic:"management chantier",hours:8,status:"done",competence:"Encadrer / communiquer",knowledge:"Management",drive:0}
+const CURRICULUM={"year1": [{"id": "tue-01", "week": 1, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Analyse d’un dossier d’opération TP", "competence": "C2.1", "knowledge": "S5.4 ; S5.5 ; S2.8", "theme": "DCE plans pièces écrites", "objective": "Identifier les acteurs, pièces et contraintes d’une opération.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "DCE plans pièces écrites", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-02", "week": 2, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Lecture de plans, profils et maquette numérique", "competence": "C2.1", "knowledge": "S2.8 ; S2.10", "theme": "plans profils BIM", "objective": "Extraire les informations géométriques et techniques utiles.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "plans profils BIM", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-03", "week": 3, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Terrassements : déblais, remblais et plateformes", "competence": "C2.1", "knowledge": "S7.5", "theme": "terrassement plateforme", "objective": "Comprendre les principes techniques d’un terrassement.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "terrassement plateforme", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-04", "week": 4, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Cubatures et mouvement des terres", "competence": "C2.1", "knowledge": "S4.1 ; S7.5", "theme": "cubature terrassement", "objective": "Quantifier déblais/remblais et établir un bilan simple.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "cubature terrassement", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-05", "week": 5, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Géotechnique appliquée aux terrassements", "competence": "C2.1", "knowledge": "S7.5", "theme": "sols GTR laboratoire", "objective": "Relier caractéristiques des sols et choix techniques.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "sols GTR laboratoire", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-06", "week": 6, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Chaussées : constitution et matériaux", "competence": "C2.1", "knowledge": "S7.6", "theme": "chaussée couches matériaux", "objective": "Identifier les fonctions des différentes couches.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "chaussée couches matériaux", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-07", "week": 7, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Voirie : profils en long et en travers", "competence": "C2.2", "knowledge": "S7.6 ; S2.8", "theme": "voirie profils", "objective": "Proposer une géométrie routière simple.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "voirie profils", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-08", "week": 8, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Assainissement EU/EP : principes", "competence": "C2.1", "knowledge": "S7.7", "theme": "assainissement EU EP", "objective": "Comprendre fonctionnement, composants et contraintes.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "assainissement EU EP", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-09", "week": 9, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Conception simple d’un réseau d’assainissement", "competence": "C2.2", "knowledge": "S7.7", "theme": "assainissement profil regards", "objective": "Proposer un tracé, des pentes et ouvrages courants.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "assainissement profil regards", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-10", "week": 10, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Réseaux d’eau potable", "competence": "C2.1", "knowledge": "S7.8", "theme": "AEP eau potable", "objective": "Identifier les composants et contraintes d’un réseau AEP.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "AEP eau potable", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-11", "week": 11, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Coordination des réseaux secs", "competence": "C2.1", "knowledge": "S7.10 ; S7.11 ; S7.12", "theme": "réseaux secs gaz fibre électrique", "objective": "Coordonner les réseaux dans l’emprise d’un projet.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "réseaux secs gaz fibre électrique", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-12", "week": 12, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Ouvrages en béton : principes", "competence": "C2.1", "knowledge": "S7.1 ; S7.2", "theme": "béton ouvrage", "objective": "Identifier fonctionnement et dispositions constructives.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "béton ouvrage", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-13", "week": 13, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Petit ouvrage de soutènement", "competence": "C2.2", "knowledge": "S7.1 ; S7.2", "theme": "mur soutènement", "objective": "Comparer puis proposer une solution simple.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "mur soutènement", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-14", "week": 14, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Ouvrages métalliques et bois", "competence": "C2.1", "knowledge": "S7.3 ; S7.4", "theme": "ouvrage métallique bois", "objective": "Identifier usages, assemblages et contraintes.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "ouvrage métallique bois", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-15", "week": 15, "slot": "TUE", "unit": "U5", "hours": 4, "title": "BIM et maquette numérique", "competence": "C2.2", "knowledge": "S2.9 ; S2.10", "theme": "BIM travaux publics", "objective": "Exploiter une maquette et ses données.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "BIM travaux publics", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-16", "week": 16, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Choix de variantes et développement durable", "competence": "C2.2", "knowledge": "S1.4 ; S1.7", "theme": "variante développement durable", "objective": "Comparer plusieurs solutions selon des critères multiples.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "variante développement durable", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-17", "week": 17, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Projet transversal VRD — étude", "competence": "C2.1 ; C2.2", "knowledge": "S2 ; S4 ; S7", "theme": "projet VRD terrassement assainissement", "objective": "Mobiliser plusieurs domaines sur un même projet.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "projet VRD terrassement assainissement", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-18", "week": 18, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Synthèse U5 de 1re année", "competence": "C2.1 ; C2.2", "knowledge": "S2 ; S4 ; S5 ; S7", "theme": "sujet U5 BTS", "objective": "Consolider l’analyse et la conception avant passage en 2e année.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "sujet U5 BTS", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-01", "week": 1, "slot": "THU", "unit": "U8", "hours": 4, "title": "Topographie : bases, cadre et vocabulaire", "competence": "C4.1", "knowledge": "S3.1 ; S3.2", "theme": "topographie bases", "objective": "Maîtriser le vocabulaire et le cadre de travail.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "topographie bases", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-02", "week": 2, "slot": "THU", "unit": "U8", "hours": 4, "title": "Mise en station des appareils", "competence": "C4.1", "knowledge": "S3.4 ; S3.5", "theme": "station totale niveau", "objective": "Mettre en œuvre niveau et station totale.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "station totale niveau", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-03", "week": 3, "slot": "THU", "unit": "U8", "hours": 4, "title": "Précision, erreurs et contrôles", "competence": "C4.1 ; C4.2", "knowledge": "S3.6", "theme": "topographie précision erreurs", "objective": "Évaluer la qualité d’une mesure.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "topographie précision erreurs", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-04", "week": 4, "slot": "THU", "unit": "U8", "hours": 4, "title": "Nivellement direct", "competence": "C4.1", "knowledge": "S3.7", "theme": "nivellement direct", "objective": "Déterminer des altitudes par nivellement.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "nivellement direct", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-05", "week": 5, "slot": "THU", "unit": "U8", "hours": 4, "title": "Nivellement : cheminement et fermeture", "competence": "C4.1 ; C4.2", "knowledge": "S3.7", "theme": "nivellement cheminement", "objective": "Contrôler et compenser un cheminement.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "nivellement cheminement", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-06", "week": 6, "slot": "THU", "unit": "U8", "hours": 4, "title": "Levé planimétrique", "competence": "C4.1", "knowledge": "S3.8", "theme": "levé planimétrique", "objective": "Réaliser un levé organisé et codifié.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "levé planimétrique", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-07", "week": 7, "slot": "THU", "unit": "U8", "hours": 4, "title": "Coordonnées et orientation", "competence": "C4.1", "knowledge": "S3.3 ; S3.8", "theme": "coordonnées topographie", "objective": "Exploiter coordonnées et orientations.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "coordonnées topographie", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-08", "week": 8, "slot": "THU", "unit": "U8", "hours": 4, "title": "Levé à la station totale", "competence": "C4.1", "knowledge": "S3.5 ; S3.8", "theme": "station totale levé", "objective": "Réaliser et transférer un levé complet.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "station totale levé", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-09", "week": 9, "slot": "THU", "unit": "U8", "hours": 4, "title": "Production d’un plan topographique", "competence": "C4.1", "knowledge": "S3.12", "theme": "plan topographique DAO", "objective": "Produire un plan exploitable à partir du levé.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "plan topographique DAO", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-10", "week": 10, "slot": "THU", "unit": "U8", "hours": 4, "title": "Implantation de points", "competence": "C4.1", "knowledge": "S3.10", "theme": "implantation points", "objective": "Implanter des points à partir de coordonnées.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "implantation points", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-11", "week": 11, "slot": "THU", "unit": "U8", "hours": 4, "title": "Implantation d’axes et altitudes", "competence": "C4.1", "knowledge": "S3.10", "theme": "implantation axes altitude", "objective": "Implanter axes, alignements et niveaux.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "implantation axes altitude", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-12", "week": 12, "slot": "THU", "unit": "U8", "hours": 4, "title": "Marquage-piquetage et réseaux existants", "competence": "C4.1 ; C4.2", "knowledge": "S3.11", "theme": "marquage piquetage réseaux", "objective": "Matérialiser et contrôler des réseaux existants.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "marquage piquetage réseaux", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-13", "week": 13, "slot": "THU", "unit": "U8", "hours": 4, "title": "Contrôle d’une canalisation", "competence": "C4.2", "knowledge": "S3.9", "theme": "contrôle canalisation assainissement", "objective": "Contrôler position, pente et altimétrie.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "contrôle canalisation assainissement", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-14", "week": 14, "slot": "THU", "unit": "U8", "hours": 4, "title": "Plan de récolement", "competence": "C4.1 ; C4.2", "knowledge": "S3.13", "theme": "récolement plan", "objective": "Réaliser un relevé final et un plan de récolement.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "récolement plan", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-15", "week": 15, "slot": "THU", "unit": "U8", "hours": 4, "title": "Laboratoire : identification des sols", "competence": "C4.2", "knowledge": "S7.5", "theme": "laboratoire sols granulométrie", "objective": "Caractériser un sol et interpréter les résultats.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "laboratoire sols granulométrie", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-16", "week": 16, "slot": "THU", "unit": "U8", "hours": 4, "title": "Laboratoire : Proctor et compactage", "competence": "C4.2", "knowledge": "S7.5", "theme": "Proctor compactage", "objective": "Déterminer l’optimum de compactage et juger la conformité.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "Proctor compactage", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-17", "week": 17, "slot": "THU", "unit": "U8", "hours": 4, "title": "Contrôles matériaux de chaussée", "competence": "C4.2", "knowledge": "S7.6 ; S6.3", "theme": "granulats chaussée contrôle", "objective": "Analyser des résultats de contrôle.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "granulats chaussée contrôle", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-18", "week": 18, "slot": "THU", "unit": "U8", "hours": 4, "title": "Synthèse U8 : relever, implanter, contrôler", "competence": "C4.1 ; C4.2", "knowledge": "S3 ; S6 ; S7", "theme": "topographie laboratoire projet", "objective": "Conduire une mission complète de terrain et de contrôle.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "topographie laboratoire projet", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-01", "week": 1, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Analyser un DCE et lancer la préparation", "competence": "C3.1 ; C3.2", "knowledge": "S5.4 ; S5.5 ; S9.8", "theme": "DCE chantier", "objective": "Structurer les informations nécessaires à la préparation.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "DCE chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-02", "week": 2, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Méthodes d’exécution des terrassements", "competence": "C3.1", "knowledge": "S7.5 ; S10.5", "theme": "terrassement méthode chantier", "objective": "Définir une méthode adaptée aux contraintes.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "terrassement méthode chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-03", "week": 3, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Engins et calculs de rendement", "competence": "C3.1", "knowledge": "S9.6 ; S7.5", "theme": "engins rendement terrassement", "objective": "Dimensionner un atelier d’engins.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "engins rendement terrassement", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-04", "week": 4, "slot": "FRI", "unit": "U7", "hours": 8, "title": "Communication et compte rendu de chantier", "competence": "C1.1", "knowledge": "S2.1 ; S8.5 ; S8.6", "theme": "réunion chantier compte rendu", "objective": "Communiquer clairement à l’écrit et à l’oral.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "réunion chantier compte rendu", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-05", "week": 5, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Mouvement des terres et logistique", "competence": "C3.1 ; C3.3", "knowledge": "S7.5 ; S9.1 ; S9.6", "theme": "mouvement terres logistique", "objective": "Organiser flux, stocks et évacuations.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "mouvement terres logistique", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-06", "week": 6, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Préparation d’un chantier de chaussée", "competence": "C3.1 ; C3.2", "knowledge": "S7.6 ; S10.5", "theme": "chaussée chantier méthode", "objective": "Définir phasage, moyens, contrôles et sécurité.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "chaussée chantier méthode", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-07", "week": 7, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Préparation d’un chantier d’assainissement", "competence": "C3.1 ; C3.2", "knowledge": "S7.7 ; S10.5", "theme": "assainissement chantier", "objective": "Définir méthode de pose, blindage et contrôles.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "assainissement chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-08", "week": 8, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Installation de chantier et PIC", "competence": "C3.1 ; C3.2", "knowledge": "S9.8 ; S10.5", "theme": "plan installation chantier", "objective": "Construire un plan d’installation cohérent.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "plan installation chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-09", "week": 9, "slot": "FRI", "unit": "U7", "hours": 8, "title": "Prévention et management de la sécurité", "competence": "C1.2 ; C1.3", "knowledge": "S10.1 ; S10.2 ; S8.7", "theme": "sécurité chantier management", "objective": "Analyser les risques et encadrer les réponses.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "sécurité chantier management", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-10", "week": 10, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Affectation des ressources", "competence": "C3.3", "knowledge": "S9.5 ; S9.6", "theme": "ressources humaines engins", "objective": "Affecter effectifs et matériels aux tâches.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "ressources humaines engins", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-11", "week": 11, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Planning de chantier", "competence": "C3.3", "knowledge": "S9.1 ; S9.2 ; S9.3 ; S9.4", "theme": "planning chantier Gantt", "objective": "Ordonnancer les tâches et construire un planning.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "planning chantier Gantt", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-12", "week": 12, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Budget prévisionnel", "competence": "C3.4", "knowledge": "S4.2 ; S4.3 ; S9.7", "theme": "déboursé sec budget chantier", "objective": "Construire un budget prévisionnel simple.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "déboursé sec budget chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-13", "week": 13, "slot": "FRI", "unit": "U7", "hours": 8, "title": "Qualité et développement durable", "competence": "C1.4 ; C1.5", "knowledge": "S1 ; S6", "theme": "SOSED qualité chantier", "objective": "Analyser exigences qualité et environnement.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "SOSED qualité chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-14", "week": 14, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Pièces techniques de préparation", "competence": "C3.2", "knowledge": "S2.1 ; S5.5 ; S9.8", "theme": "documents préparation chantier", "objective": "Produire les documents nécessaires à l’exécution.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "documents préparation chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-15", "week": 15, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Projet fil rouge VRD — méthodes", "competence": "C3.1 ; C3.2", "knowledge": "S7.5 ; S7.6 ; S7.7", "theme": "projet VRD DCE", "objective": "Définir méthodes et moyens sur un projet transversal.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "projet VRD DCE", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-16", "week": 16, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Projet fil rouge — planning et budget", "competence": "C3.3 ; C3.4", "knowledge": "S4 ; S9", "theme": "projet VRD planning budget", "objective": "Planifier et budgéter le projet.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "projet VRD planning budget", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-17", "week": 17, "slot": "FRI", "unit": "U7", "hours": 8, "title": "Encadrement d’équipe et situation délicate", "competence": "C1.2", "knowledge": "S8.1 ; S8.3 ; S8.7", "theme": "management équipe chantier", "objective": "Adapter son management aux situations.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "management équipe chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-18", "week": 18, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Synthèse U6 de 1re année", "competence": "C3.1 ; C3.2 ; C3.3 ; C3.4", "knowledge": "S1 ; S4 ; S5 ; S9 ; S10", "theme": "sujet U6 préparation chantier", "objective": "Mobiliser l’ensemble des compétences de préparation.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "sujet U6 préparation chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}], "year2": [{"id": "tue-01", "week": 1, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Diagnostic de rentrée sur dossier complexe", "competence": "C2.1", "knowledge": "S2 ; S5 ; S7", "theme": "projet travaux publics", "objective": "Réactiver les acquis de première année.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "projet travaux publics", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-02", "week": 2, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Variantes technico-économiques", "competence": "C2.2", "knowledge": "S4.1 ; S4.2 ; S7", "theme": "variante technique économique", "objective": "Justifier un choix technique et économique.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "variante technique économique", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-03", "week": 3, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Optimisation d’un mouvement des terres", "competence": "C2.2", "knowledge": "S7.5 ; S4.1", "theme": "mouvement terres cubature", "objective": "Optimiser déblais, remblais et emprunts.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "mouvement terres cubature", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-04", "week": 4, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Chaussées : diagnostic et réhabilitation", "competence": "C2.1 ; C2.2", "knowledge": "S7.6 ; S7.18", "theme": "chaussée réhabilitation", "objective": "Choisir une stratégie de réhabilitation.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "chaussée réhabilitation", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-05", "week": 5, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Assainissement complexe", "competence": "C2.2", "knowledge": "S7.7", "theme": "assainissement réseau projet", "objective": "Coordonner tracé, pentes et points singuliers.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "assainissement réseau projet", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-06", "week": 6, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Conception simple AEP", "competence": "C2.2", "knowledge": "S7.8", "theme": "AEP conception", "objective": "Proposer une solution cohérente d’alimentation en eau.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "AEP conception", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-07", "week": 7, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Coordination multi-réseaux", "competence": "C2.2", "knowledge": "S7.9 ; S7.10 ; S7.11 ; S7.12", "theme": "réseaux urbains coordination", "objective": "Résoudre les conflits d’emprise.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "réseaux urbains coordination", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-08", "week": 8, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Structure béton", "competence": "C2.1 ; C2.2", "knowledge": "S7.1 ; S7.2", "theme": "ouvrage béton structure", "objective": "Analyser le fonctionnement d’un ouvrage.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "ouvrage béton structure", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-09", "week": 9, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Ponts et viaducs", "competence": "C2.1", "knowledge": "S7.14", "theme": "pont viaduc", "objective": "Identifier familles, composants et contraintes.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "pont viaduc", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-10", "week": 10, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Ouvrages métalliques", "competence": "C2.1", "knowledge": "S7.3", "theme": "ouvrage métallique", "objective": "Analyser assemblages et fonctionnement.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "ouvrage métallique", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-11", "week": 11, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Travaux ferroviaires", "competence": "C2.1", "knowledge": "S7.13", "theme": "travaux ferroviaires", "objective": "Identifier structure et contraintes d’une voie.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "travaux ferroviaires", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-12", "week": 12, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Tunnels et travaux souterrains", "competence": "C2.1", "knowledge": "S7.17", "theme": "tunnel travaux souterrains", "objective": "Comparer les principales méthodes de réalisation.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "tunnel travaux souterrains", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-13", "week": 13, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Travaux fluviaux, maritimes et barrages", "competence": "C2.1", "knowledge": "S7.15 ; S7.16", "theme": "travaux maritimes barrage", "objective": "Identifier les contraintes spécifiques.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "travaux maritimes barrage", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-14", "week": 14, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Diagnostic de pathologie", "competence": "C2.1", "knowledge": "S7.18", "theme": "pathologie ouvrage", "objective": "Identifier causes probables et investigations.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "pathologie ouvrage", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-15", "week": 15, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Maintenance et réhabilitation", "competence": "C2.2", "knowledge": "S7.18", "theme": "maintenance réhabilitation", "objective": "Proposer une intervention adaptée.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "maintenance réhabilitation", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-16", "week": 16, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Coordination BIM", "competence": "C2.2", "knowledge": "S2.7 ; S2.10 ; S2.14", "theme": "BIM coordination", "objective": "Exploiter les données numériques du projet.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "BIM coordination", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-17", "week": 17, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Optimisation environnementale", "competence": "C2.2", "knowledge": "S1.4 ; S1.7 ; S1.8", "theme": "écoconception travaux publics", "objective": "Intégrer les impacts environnementaux au choix.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "écoconception travaux publics", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "tue-18", "week": 18, "slot": "TUE", "unit": "U5", "hours": 4, "title": "Préparation U5 — sujet de synthèse", "competence": "C2.1 ; C2.2", "knowledge": "S2 ; S4 ; S5 ; S7", "theme": "sujet BTS U5", "objective": "Traiter une étude de conception complète.", "activity": "Étude guidée, mise en application et synthèse.", "deliverable": "Production technique / note de synthèse", "driveQuery": "sujet BTS U5", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-01", "week": 1, "slot": "THU", "unit": "U8", "hours": 4, "title": "Diagnostic topographie et contrôle", "competence": "C4.1 ; C4.2", "knowledge": "S3.5 ; S3.6", "theme": "topographie contrôle", "objective": "Réactiver procédures et contrôles de précision.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "topographie contrôle", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-02", "week": 2, "slot": "THU", "unit": "U8", "hours": 4, "title": "Polygonation", "competence": "C4.1 ; C4.2", "knowledge": "S3.6 ; S3.8", "theme": "polygonation topographie", "objective": "Construire et contrôler un réseau de points.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "polygonation topographie", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-03", "week": 3, "slot": "THU", "unit": "U8", "hours": 4, "title": "GNSS et référentiels", "competence": "C4.1", "knowledge": "S3.3", "theme": "GNSS topographie", "objective": "Comprendre les référentiels et l’acquisition GNSS.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "GNSS topographie", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-04", "week": 4, "slot": "THU", "unit": "U8", "hours": 4, "title": "Implantation avancée", "competence": "C4.1", "knowledge": "S3.10", "theme": "implantation ouvrage", "objective": "Préparer et réaliser une implantation complexe.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "implantation ouvrage", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-05", "week": 5, "slot": "THU", "unit": "U8", "hours": 4, "title": "Guidage des engins", "competence": "C4.1 ; C4.2", "knowledge": "S3.14", "theme": "guidage engins chantier", "objective": "Comprendre les données nécessaires au guidage.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "guidage engins chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-06", "week": 6, "slot": "THU", "unit": "U8", "hours": 4, "title": "Contrôle d’un réseau d’assainissement", "competence": "C4.2", "knowledge": "S3.9 ; S7.7", "theme": "contrôle assainissement", "objective": "Contrôler géométrie et conformité d’un réseau.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "contrôle assainissement", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-07", "week": 7, "slot": "THU", "unit": "U8", "hours": 4, "title": "Récolement avancé", "competence": "C4.1 ; C4.2", "knowledge": "S3.13 ; S2.14", "theme": "récolement plan", "objective": "Produire des données fiables tel que construit.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "récolement plan", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-08", "week": 8, "slot": "THU", "unit": "U8", "hours": 4, "title": "Photogrammétrie", "competence": "C4.1", "knowledge": "S3.15", "theme": "photogrammétrie drone", "objective": "Comprendre acquisition, traitement et limites.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "photogrammétrie drone", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-09", "week": 9, "slot": "THU", "unit": "U8", "hours": 4, "title": "Scanner 3D et nuages de points", "competence": "C4.1 ; C4.2", "knowledge": "S3.15", "theme": "scanner 3D nuage points", "objective": "Exploiter des données 3D pour relevé et contrôle.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "scanner 3D nuage points", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-10", "week": 10, "slot": "THU", "unit": "U8", "hours": 4, "title": "Tolérances et conformité géométrique", "competence": "C4.2", "knowledge": "S3.6 ; S6.3", "theme": "tolérance contrôle", "objective": "Comparer mesures, tolérances et exigences.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "tolérance contrôle", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-11", "week": 11, "slot": "THU", "unit": "U8", "hours": 4, "title": "Inspection et pathologie", "competence": "C4.2", "knowledge": "S7.18 ; S6.3", "theme": "pathologie contrôle ouvrage", "objective": "Observer et documenter une pathologie.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "pathologie contrôle ouvrage", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-12", "week": 12, "slot": "THU", "unit": "U8", "hours": 4, "title": "Contrôles béton", "competence": "C4.2", "knowledge": "S7.2 ; S6.3", "theme": "laboratoire béton", "objective": "Analyser essais et conformité du béton.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "laboratoire béton", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-13", "week": 13, "slot": "THU", "unit": "U8", "hours": 4, "title": "Compactage avancé", "competence": "C4.2", "knowledge": "S7.5 ; S6.3", "theme": "compactage contrôle", "objective": "Interpréter résultats et décider de conformité.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "compactage contrôle", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-14", "week": 14, "slot": "THU", "unit": "U8", "hours": 4, "title": "Contrôles chaussées et granulats", "competence": "C4.2", "knowledge": "S7.6 ; S6.3", "theme": "chaussée granulats contrôle", "objective": "Analyser les contrôles matériaux et mise en œuvre.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "chaussée granulats contrôle", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-15", "week": 15, "slot": "THU", "unit": "U8", "hours": 4, "title": "Traitement d’une non-conformité", "competence": "C4.2", "knowledge": "S6.1 ; S6.3", "theme": "non conformité chantier", "objective": "Formaliser écart, analyse et action corrective.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "non conformité chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-16", "week": 16, "slot": "THU", "unit": "U8", "hours": 4, "title": "Mission intégrée relever-implanter-contrôler", "competence": "C4.1 ; C4.2", "knowledge": "S3 ; S6", "theme": "topographie implantation contrôle", "objective": "Conduire une mission complète.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "topographie implantation contrôle", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-17", "week": 17, "slot": "THU", "unit": "U8", "hours": 4, "title": "Préparation U8 — sujet blanc", "competence": "C4.1 ; C4.2", "knowledge": "S3 ; S6 ; S7", "theme": "sujet BTS U8", "objective": "Traiter une situation type examen.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "sujet BTS U8", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "thu-18", "week": 18, "slot": "THU", "unit": "U8", "hours": 4, "title": "Remédiation et consolidation U8", "competence": "C4.1 ; C4.2", "knowledge": "S3 ; S6 ; S7", "theme": "U8 topographie contrôle", "objective": "Consolider les points faibles avant certification.", "activity": "TP / expérimentation / exploitation des résultats.", "deliverable": "Compte rendu / relevé / PV de contrôle", "driveQuery": "U8 topographie contrôle", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-01", "week": 1, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Stratégie de préparation d’un chantier complexe", "competence": "C3.1 ; C3.2", "knowledge": "S5 ; S9.8", "theme": "projet chantier complexe", "objective": "Structurer une stratégie globale de préparation.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "projet chantier complexe", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-02", "week": 2, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Mode opératoire complexe et phasage", "competence": "C3.1", "knowledge": "S7 ; S10.5", "theme": "mode opératoire chantier", "objective": "Formaliser méthode, phases, moyens et contrôles.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "mode opératoire chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-03", "week": 3, "slot": "FRI", "unit": "U7", "hours": 8, "title": "Communication avec les acteurs du projet", "competence": "C1.1 ; C1.2", "knowledge": "S2.2 ; S8.5 ; S8.6", "theme": "communication chantier acteurs", "objective": "Adapter la communication aux interlocuteurs.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "communication chantier acteurs", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-04", "week": 4, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Optimisation ressources et rendements", "competence": "C3.1 ; C3.3", "knowledge": "S9.5 ; S9.6", "theme": "ressources chantier", "objective": "Optimiser effectifs, matériels et productivité.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "ressources chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-05", "week": 5, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Planning complexe et chemin critique", "competence": "C3.3", "knowledge": "S9.1 ; S9.2 ; S9.3 ; S9.4", "theme": "planning chantier chemin critique", "objective": "Construire et ajuster un planning détaillé.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "planning chantier chemin critique", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-06", "week": 6, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Budget, prix et suivi prévisionnel", "competence": "C3.4", "knowledge": "S4.2 ; S4.3 ; S4.4 ; S9.7", "theme": "budget prévisionnel chantier", "objective": "Établir le budget et identifier les postes sensibles.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "budget prévisionnel chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-07", "week": 7, "slot": "FRI", "unit": "U7", "hours": 8, "title": "Encadrer et motiver une équipe", "competence": "C1.2", "knowledge": "S8.1 ; S8.3 ; S8.4 ; S8.8", "theme": "management équipe", "objective": "Adapter sa posture de management.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "management équipe", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-08", "week": 8, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Intégrer sécurité, environnement et qualité", "competence": "C3.1 ; C3.2", "knowledge": "S1 ; S6 ; S10", "theme": "PPSPS qualité environnement", "objective": "Intégrer QSE dans méthodes et documents.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "PPSPS qualité environnement", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-09", "week": 9, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Déchets, nuisances et performance environnementale", "competence": "C3.1 ; C3.2", "knowledge": "S1.2 ; S1.5 ; S1.8", "theme": "déchets SOSED chantier", "objective": "Préparer le suivi environnemental du chantier.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "déchets SOSED chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-10", "week": 10, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Plan qualité et contrôles", "competence": "C3.2", "knowledge": "S6.1 ; S6.2 ; S6.3", "theme": "plan qualité contrôle", "objective": "Planifier contrôles, preuves et traitement des écarts.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "plan qualité contrôle", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-11", "week": 11, "slot": "FRI", "unit": "U7", "hours": 8, "title": "Analyser les écarts planning et budget", "competence": "C1.6", "knowledge": "S9.7", "theme": "suivi planning budget", "objective": "Analyser les dérives et proposer des actions.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "suivi planning budget", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-12", "week": 12, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Dossier de préparation complet", "competence": "C3.1 ; C3.2 ; C3.3 ; C3.4", "knowledge": "S2 ; S4 ; S5 ; S9 ; S10", "theme": "dossier préparation chantier", "objective": "Assembler les pièces cohérentes d’une préparation.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "dossier préparation chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-13", "week": 13, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Consultations fournisseurs et sous-traitants", "competence": "C3.2 ; C3.4", "knowledge": "S4.5 ; S5.2", "theme": "consultation fournisseur sous traitant", "objective": "Préparer une consultation et comparer des offres.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "consultation fournisseur sous traitant", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-14", "week": 14, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Projet final de préparation", "competence": "C3.1 ; C3.2 ; C3.3 ; C3.4", "knowledge": "S1 ; S4 ; S6 ; S9 ; S10", "theme": "projet U6", "objective": "Finaliser méthodes, planning, budget et QSE.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "projet U6", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-15", "week": 15, "slot": "FRI", "unit": "U7", "hours": 8, "title": "Réception et clôture de chantier", "competence": "C1.5 ; C1.7", "knowledge": "S6.3 ; S9.9", "theme": "réception chantier", "objective": "Analyser réception, réserves et livraison.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "réception chantier", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-16", "week": 16, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Préparation U6 — sujet blanc", "competence": "C3.1 ; C3.2 ; C3.3 ; C3.4", "knowledge": "S1 ; S4 ; S5 ; S6 ; S9 ; S10", "theme": "sujet BTS U6", "objective": "Traiter un sujet complet dans les conditions d’épreuve.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "sujet BTS U6", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-17", "week": 17, "slot": "FRI", "unit": "U6", "hours": 8, "title": "Correction et remédiation U6", "competence": "C3.1 ; C3.2 ; C3.3 ; C3.4", "knowledge": "S4 ; S9 ; S10", "theme": "correction U6", "objective": "Corriger les méthodes de travail.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "correction U6", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}, {"id": "fri-18", "week": 18, "slot": "FRI", "unit": "U7", "hours": 8, "title": "Synthèse management / préparation U7", "competence": "C1.1 à C1.7", "knowledge": "S1 ; S2 ; S6 ; S8 ; S9 ; S10", "theme": "sujet BTS U7 management", "objective": "Mobiliser l’ensemble du bloc management.", "activity": "Journée projet : analyse, production, restitution et correction.", "deliverable": "Dossier de préparation / management", "driveQuery": "sujet BTS U7 management", "status": "todo", "actualHours": 0, "notes": "", "driveLinks": []}]};
+const MAIN_DRIVE="0AJGPXCEfotQeUk9PVA";
+const OLD_DRIVE="1MLEFNCTX5mZebrLPa126reTZ2aG3lLpW";
+const HOLIDAYS=[
+{name:"Toussaint",start:"2026-10-17",end:"2026-11-01"},
+{name:"Noël",start:"2026-12-19",end:"2027-01-03"},
+{name:"Hiver",start:"2027-02-13",end:"2027-02-28"},
+{name:"Printemps",start:"2027-04-10",end:"2027-04-25"},
+{name:"Pont de l’Ascension",start:"2027-05-06",end:"2027-05-09"}
 ];
-
-const year2Model=[
- {id:"y2-1",unit:"U5",title:"Analyse de variantes techniques",topic:"variantes techniques",hours:4,status:"todo",competence:"C2-2",knowledge:"Conception",drive:0},
- {id:"y2-2",unit:"U8",title:"Implantation d’un ouvrage",topic:"topographie implantation",hours:4,status:"todo",competence:"C4-1",knowledge:"S3.10 Implantations",drive:0},
- {id:"y2-3",unit:"U6",title:"Projet chaussée Lubersac — méthodes",topic:"Lubersac chaussée",hours:8,status:"todo",competence:"Préparer un chantier",knowledge:"Méthodes / organisation",drive:3},
- {id:"y2-4",unit:"U5",title:"Dimensionnement / justification d’une solution",topic:"dimensionnement",hours:4,status:"todo",competence:"C2-2",knowledge:"Conception",drive:0},
- {id:"y2-5",unit:"U8",title:"Contrôle de compactage et conformité",topic:"laboratoire compactage",hours:4,status:"todo",competence:"C4-2",knowledge:"Contrôles",drive:1},
- {id:"y2-6",unit:"U6",title:"Projet Lubersac — planning et budget",topic:"Lubersac planning budget",hours:8,status:"todo",competence:"Préparer un chantier",knowledge:"S9 Planification",drive:3},
- {id:"y2-7",unit:"U7",title:"Pilotage d’équipe et réunion de chantier",topic:"management réunion chantier",hours:8,status:"todo",competence:"Encadrer un projet",knowledge:"Management",drive:0},
- {id:"y2-8",unit:"U8",title:"Récolement et contrôle final",topic:"topographie récolement",hours:4,status:"todo",competence:"C4-2",knowledge:"Récolement",drive:0}
-];
-
-const defaultData={
- settings:{cycleA:"PROMO_2026_2028",cycleAnchor:"2026-09-01",fridayDefault:"U6",driveFolderId:DRIVE_DEFAULT_ID,oauthClientId:"",driveSources:[{name:"BTS andy",id:DRIVE_DEFAULT_ID,priority:1,enabled:true}]},
- resources:[
-  {title:"Dossier BTS andy",type:"Dossier Drive",url:"https://drive.google.com/drive/folders/"+DRIVE_DEFAULT_ID,tags:["Drive"]},
-  {title:"Procédures Laboratoire BTS TP",type:"PDF",url:"https://drive.google.com/file/d/13vgUZpEvCGhm8fJWnx33lYxGAX7ApNxf/view",tags:["U8","Laboratoire"]},
-  {title:"Plan annuel BTS TP Chantier CFA",type:"Présentation",url:"https://docs.google.com/presentation/d/1AmEpoMms0tInJPyPOD5q7v_y4m8-fFCi/edit",tags:["Planification"]},
-  {title:"Sujet U6 Lubersac chaussée",type:"Dossier Drive",url:"https://drive.google.com/drive/folders/1FXjzL_2JxzY0Jc_28l3Givmb3QW3QnKu",tags:["U6","Projet"]}
- ],
- promotions:{
-  PROMO_2026_2028:{
-    label:"Promotion 2026-2028",
-    currentLevel:1,
-    year1:{label:"1re année 2026-2027",status:"in_progress",sessions:structuredClone(year1Model).map((s,i)=>({...s,status:i<4?"done":i==4?"partial":"todo"}))},
-    year2:{label:"2e année 2027-2028",status:"future",sessions:structuredClone(year2Model)}
-  },
-  PROMO_2025_2027:{
-    label:"Promotion 2025-2027",
-    currentLevel:2,
-    year1:{label:"1re année 2025-2026",status:"completed",sessions:structuredClone(year1Model)},
-    year2:{label:"2e année 2026-2027",status:"in_progress",sessions:structuredClone(year2Model).map((s,i)=>({...s,status:i<2?"done":i==2?"partial":"todo"}))}
-  }
- },
- archives:[]
+const UNIT_REF={
+U5:{title:"Analyse et conception d’un ouvrage",c:["C2.1 Analyser un ouvrage et sa réalisation","C2.2 Concevoir un ouvrage simple"]},
+U6:{title:"Préparation de chantier",c:["C3.1 Concevoir méthodes et moyens","C3.2 Produire les pièces administratives et techniques","C3.3 Planifier les travaux","C3.4 Établir le budget prévisionnel"]},
+U7:{title:"Analyse de l’encadrement d’un projet",c:["C1.1 Communiquer","C1.2 Collaborer et encadrer","C1.3 Gérer les risques santé/sécurité","C1.4 Développement durable","C1.5 Qualité","C1.6 Planning et budget","C1.7 Livraison"]},
+U8:{title:"Implantation et contrôle des travaux",c:["C4.1 Implanter et relever des ouvrages","C4.2 Analyser et contrôler des ouvrages"]}
 };
+const KNOW={S1:"Développement durable",S2:"Communication technique et gestion numérique",S3:"Topographie",S4:"Économie de la construction",S5:"Procédures administratives et réglementaires",S6:"Qualité",S7:"Sciences et technologie de la construction",S8:"Management",S9:"Ressources et planification",S10:"Santé et sécurité au travail"};
 
-let data=loadData();
-let selectedPromotion="PROMO_2025_2027";
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function seed(plan,n){const p=clone(plan);p.forEach(s=>{if(s.week<=n){s.status="done";s.actualHours=s.hours}});return p}
+const DEFAULTS={settings:{cycleA:"PROMO_2026_2028",cycleAnchor:"2026-09-01",holidayMode:"on",oauthClientId:"",driveSources:[{name:"BTS andy",id:MAIN_DRIVE,priority:1,enabled:true},{name:"Ancien BTS",id:OLD_DRIVE,priority:2,enabled:true}]},promotions:{
+PROMO_2025_2027:{label:"Promotion 2025-2027",currentLevel:2,year1:{label:"1re année 2025-2026",status:"completed",sessions:seed(CURRICULUM.year1,18)},year2:{label:"2e année 2026-2027",status:"in_progress",sessions:seed(CURRICULUM.year2,3)}},
+PROMO_2026_2028:{label:"Promotion 2026-2028",currentLevel:1,year1:{label:"1re année 2026-2027",status:"in_progress",sessions:seed(CURRICULUM.year1,4)},year2:{label:"2e année 2027-2028",status:"future",sessions:clone(CURRICULUM.year2)}}
+},archives:[]};
 
-function loadData(){
- const raw=localStorage.getItem("btstp_pilot_v2");
- if(!raw) return structuredClone(defaultData);
- try{return JSON.parse(raw)}catch{return structuredClone(defaultData)}
-}
-function saveData(){
- localStorage.setItem("btstp_pilot_v2",JSON.stringify(data));
- const e=document.getElementById("saveState"); if(e)e.textContent="Sauvegardé à "+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-}
+let data=loadData(),selectedPromo="PROMO_2025_2027",driveToken=sessionStorage.getItem("btstp_drive_token")||null,tokenClient=null,driveCache={};
 
-function showView(id){
- document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
- document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
- document.getElementById(id).classList.add("active");
- const tab=[...document.querySelectorAll(".tab")].find(t=>t.dataset.view===id); if(tab)tab.classList.add("active");
- if(id==="generator") syncGeneratorSelectors();
-}
+function loadData(){try{return JSON.parse(localStorage.getItem("btstp_pilot_v4"))||clone(DEFAULTS)}catch{return clone(DEFAULTS)}}
+function saveData(){localStorage.setItem("btstp_pilot_v4",JSON.stringify(data));const e=document.getElementById("saveState");if(e)e.textContent="Sauvegardé à "+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}
+function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));document.getElementById(id).classList.add("active");const t=[...document.querySelectorAll(".tab")].find(x=>x.dataset.view===id);if(t)t.classList.add("active");if(id==="generator")fillPromoSelect("genPromo")}
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>showView(t.dataset.view));
 
 function promoKeys(){return Object.keys(data.promotions)}
-function currentCfaPromotionKey(){
- const keys=promoKeys(); if(keys.length<2)return keys[0];
- const anchor=new Date(data.settings.cycleAnchor+"T12:00:00");
- const days=Math.floor((new Date()-anchor)/(1000*60*60*24));
- const block=Math.floor(days/14);
- const a=data.settings.cycleA;
- const b=keys.find(k=>k!==a)||a;
- return (((block%2)+2)%2===0)?a:b;
-}
-function currentPromotion(){return data.promotions[currentCfaPromotionKey()]}
 function currentYearKey(p){return p.currentLevel===1?"year1":"year2"}
 function currentYear(p){return p[currentYearKey(p)]}
-function unitForDay(day){if(day===2)return"U5";if(day===4)return"U8";if(day===5)return data.settings.fridayDefault;return null}
-function nextSessionFor(unit,promoKey=currentCfaPromotionKey()){
- const p=data.promotions[promoKey], y=currentYear(p);
- return y.sessions.find(s=>s.unit===unit&&s.status!=="done")||null;
-}
-function progressPct(sessions){
- if(!sessions.length)return 0; let pts=0;
- sessions.forEach(s=>pts+=s.status==="done"?1:s.status==="partial"?.5:0);
- return Math.round(pts/sessions.length*100);
-}
-function statusLabel(s){return s==="done"?"Réalisé":s==="partial"?"Partiel":"À faire"}
+function parseDate(d){return new Date(d+"T12:00:00")}
+function ymd(d){return d.toISOString().slice(0,10)}
+function holidayFor(date){if(data.settings.holidayMode!=="on")return null;const x=ymd(date);return HOLIDAYS.find(h=>x>=h.start&&x<=h.end)||null}
+function cfaPromoForDate(date){const a=parseDate(data.settings.cycleAnchor),days=Math.floor((date-a)/86400000),block=Math.floor(days/14),pk=data.settings.cycleA,other=promoKeys().find(k=>k!==pk)||pk;return (((block%2)+2)%2===0)?pk:other}
+function currentCfaPromo(){return cfaPromoForDate(new Date())}
+function slotDay(slot){return slot==="TUE"?2:slot==="THU"?4:5}
+function nextDateForSlot(pk,slot){let d=new Date();d.setHours(12,0,0,0);for(let i=0;i<200;i++){if(d.getDay()===slotDay(slot)&&!holidayFor(d)&&cfaPromoForDate(d)===pk)return new Date(d);d.setDate(d.getDate()+1)}return null}
+function statusLabel(st){return {done:"Réalisé",partial:"Partiel",postponed:"Reporté",todo:"À faire"}[st]||st}
+function progress(list){if(!list.length)return 0;let v=0;list.forEach(s=>v+=s.status==="done"?1:s.status==="partial"?.5:0);return Math.round(v/list.length*100)}
+function hourStats(list){return {planned:list.reduce((a,s)=>a+s.hours,0),actual:list.reduce((a,s)=>a+(Number(s.actualHours)||0),0)}}
+function nextBySlot(pk,slot){const p=data.promotions[pk];if(!p)return null;return currentYear(p).sessions.filter(s=>s.slot===slot).sort((a,b)=>a.week-b.week).find(s=>s.status!=="done")||null}
+function findSession(pk,yk,id){return data.promotions[pk]?.[yk]?.sessions.find(s=>s.id===id)}
+
+function sessionCard(pk,yk,se,full){
+const date=nextDateForSlot(pk,se.slot);
+return `<div class="slot ${se.status}"><span class="tag accentTag">${se.unit}</span><span class="tag">Semaine CFA ${se.week}</span>${date?`<span class="tag">${date.toLocaleDateString("fr-FR",{weekday:"short",day:"numeric",month:"short"})}</span>`:""}<h3 style="margin:7px 0">${se.title}</h3><p><strong>Objectif :</strong> ${se.objective}</p>${full?`<p><strong>Activité :</strong> ${se.activity}</p><p><strong>Production :</strong> ${se.deliverable}</p>`:""}<p class="muted">${se.competence} · ${se.knowledge} · ${se.hours} h</p>${se.notes?`<div class="notice">${escapeHtml(se.notes)}</div>`:""}<div class="actions"><button class="btn small" onclick="setStatus('${pk}','${yk}','${se.id}','done')">✓ Réalisé</button><button class="btn secondary small" onclick="setStatus('${pk}','${yk}','${se.id}','partial')">Partiel</button><button class="btn ghost small" onclick="setStatus('${pk}','${yk}','${se.id}','postponed')">Reporter</button><button class="btn secondary small" onclick="editHours('${pk}','${yk}','${se.id}')">Heures réelles</button><button class="btn secondary small" onclick="editNote('${pk}','${yk}','${se.id}')">Note</button><button class="btn secondary small" onclick="searchFromSession('${pk}','${yk}','${se.id}')">Drive</button>${se.driveLinks?.length?`<button class="btn secondary small" onclick="window.open('${se.driveLinks[0].url}','_blank')">Ressource liée</button>`:""}</div></div>`}
 
 function renderHome(){
- const pk=currentCfaPromotionKey(), p=data.promotions[pk], y=currentYear(p), unit=unitForDay(new Date().getDay());
- document.getElementById("cohortPill").textContent=p.label+" au CFA";
- document.getElementById("todayTitle").textContent=new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"}).replace(/^./,x=>x.toUpperCase());
- const c=document.getElementById("todayContent");
- if(unit){
-  const s=nextSessionFor(unit,pk);
-  c.innerHTML=s?`<div class="slot"><span class="tag">${unit}</span><strong>${s.title}</strong>
-   <p>${s.hours} h · ${s.competence} · ${s.knowledge}</p>
-   <div class="actions">
-    <button class="btn" onclick="setStatus('${pk}','${currentYearKey(p)}','${s.id}','done')">✓ Réalisé</button>
-    <button class="btn secondary" onclick="setStatus('${pk}','${currentYearKey(p)}','${s.id}','partial')">Partiel</button>
-    <button class="btn ghost" onclick="setStatus('${pk}','${currentYearKey(p)}','${s.id}','todo')">Reporter</button>
-    <button class="btn secondary" onclick='openSessionResource(${JSON.stringify(s)})'>Ressource Drive</button>
-   </div></div>`:`<p class="muted">Aucune séance ${unit} restante.</p>`;
- }else c.innerHTML=`<p class="muted">Pas de créneau fixe prévu aujourd’hui.</p>`;
- const pc=progressPct(y.sessions);
- document.getElementById("currentYearProgress").textContent=pc+"%";
- document.getElementById("currentYearBar").style.width=pc+"%";
- document.getElementById("currentYearLabel").textContent=y.label;
- const upcoming=["U5","U8",data.settings.fridayDefault].map(u=>nextSessionFor(u,pk)).filter(Boolean);
- document.getElementById("prepList").innerHTML=upcoming.map(s=>`<p>☐ <strong>${s.unit}</strong> — ${s.title}<br><span class="muted">${s.hours} h · vérifier support, sujet élève et Classroom</span></p>`).join("")||"<p class='muted'>Rien à préparer.</p>";
+const today=new Date(),pk=currentCfaPromo(),p=data.promotions[pk],h=holidayFor(today);
+document.getElementById("cohortPill").textContent=p?p.label+" au CFA":"Cycle à paramétrer";
+document.getElementById("todayTitle").textContent=today.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).replace(/^./,m=>m.toUpperCase());
+const st=document.getElementById("todayState"),box=document.getElementById("todaySession");
+if(h){st.innerHTML=`<div class="notice"><strong>Vacances : ${h.name}</strong><br>Progression suspendue automatiquement.</div>`;box.innerHTML=""}
+else if(!p){st.innerHTML="<div class='notice warning'>Aucune promotion active.</div>";box.innerHTML=""}
+else{st.innerHTML=`<p class="muted">${p.label} · ${currentYear(p).label}</p>`;const map={2:"TUE",4:"THU",5:"FRI"},slot=map[today.getDay()];box.innerHTML=slot?(nextBySlot(pk,slot)?sessionCard(pk,currentYearKey(p),nextBySlot(pk,slot),true):"<p class='muted'>Flux terminé.</p>"):"<p class='muted'>Aucun créneau fixe aujourd’hui.</p>"}
+if(p){const yy=currentYear(p),pc=progress(yy.sessions),hs=hourStats(yy.sessions);document.getElementById("promoProgress").textContent=pc+"%";document.getElementById("promoBar").style.width=pc+"%";document.getElementById("promoProgressText").textContent=`${yy.label} · ${hs.actual}/${hs.planned} h`}
+const ns=p?["TUE","THU","FRI"].map(sl=>nextBySlot(pk,sl)).filter(Boolean):[];document.getElementById("nextSessions").innerHTML=ns.map(x=>`<p><span class="tag">${x.unit}</span><strong>${x.title}</strong><br><span class="muted">${x.objective}</span></p>`).join("")||"<p class='muted'>Aucune séance.</p>";
+renderAlerts(pk)
 }
+function renderAlerts(pk){const w=document.getElementById("pedAlerts"),p=data.promotions[pk];if(!p){w.innerHTML="";return}const l=currentYear(p).sessions,pa=l.filter(s=>s.status==="partial"),po=l.filter(s=>s.status==="postponed"),a=[];if(pa.length)a.push(`⚠️ ${pa.length} séance(s) partiellement réalisées.`);if(po.length)a.push(`↪ ${po.length} séance(s) reportée(s).`);w.innerHTML=a.map(x=>`<p>${x}</p>`).join("")||"<p class='muted'>Aucune alerte.</p>"}
+function setStatus(pk,yk,id,st){const s=findSession(pk,yk,id);if(!s)return;s.status=st;if(st==="done")s.actualHours=s.hours;else if(st==="partial"&&!s.actualHours)s.actualHours=s.hours/2;else if(st==="postponed")s.actualHours=0;saveData();renderAll()}
+function editHours(pk,yk,id){const s=findSession(pk,yk,id),v=prompt("Heures réellement effectuées :",s.actualHours||0);if(v===null)return;const n=Number(String(v).replace(",","."));if(!Number.isFinite(n)||n<0)return alert("Valeur invalide.");s.actualHours=n;s.status=n>=s.hours?"done":n>0?"partial":"todo";saveData();renderAll()}
+function editNote(pk,yk,id){const s=findSession(pk,yk,id),v=prompt("Note pédagogique :",s.notes||"");if(v===null)return;s.notes=v;saveData();renderAll()}
 
-function renderWeek(){
- const pk=currentCfaPromotionKey();
- const items=[["Mardi après-midi","U5",4],["Jeudi après-midi","U8",4],["Vendredi journée",data.settings.fridayDefault,8]];
- document.getElementById("weekSchedule").innerHTML=items.map(([day,u,h])=>{
-  const s=nextSessionFor(u,pk);
-  return `<div class="slot"><span class="tag">${u}</span><strong>${day} — ${h} h</strong><p>${s?s.title:"Aucune séance restante"}</p>
-   ${s?`<span class="muted">${s.competence} · ${s.knowledge}</span><div class="actions"><button class="btn secondary" onclick='openSessionResource(${JSON.stringify(s)})'>Ressource Drive</button><button class="btn secondary" onclick="openClassroom()">Classroom</button></div>`:""}</div>`;
- }).join("");
-}
+function renderWeek(){const pk=currentCfaPromo(),p=data.promotions[pk];if(!p)return;const yk=currentYearKey(p),items=["TUE","THU","FRI"].map(sl=>nextBySlot(pk,sl)).filter(Boolean);document.getElementById("weekSchedule").innerHTML=items.map(se=>sessionCard(pk,yk,se,false)).join("");document.getElementById("weekSummary").innerHTML=`<div class="metric">${items.reduce((a,s)=>a+s.hours,0)} h</div><p><span class="tag">Mardi U5 4 h</span><span class="tag">Jeudi U8 4 h</span><span class="tag">Vendredi ${items.find(x=>x.slot==="FRI")?.unit||"U6/U7"} 8 h</span></p><p class="muted">Le vendredi U7 est inséré automatiquement aux moments clés de la progression.</p>`}
 
-function renderPromotions(){
- const keys=promoKeys();
- document.getElementById("promotionList").innerHTML=keys.map(k=>{
-  const p=data.promotions[k], active=k===selectedPromotion;
-  return `<div class="yearcard ${active?"active":""}" onclick="selectedPromotion='${k}';renderPromotions()" style="cursor:pointer">
-   <strong>${p.label}</strong><br><span class="muted">${p.currentLevel===1?"Actuellement en 1re année":"Actuellement en 2e année"}</span>
-  </div>`;
- }).join("")+
- data.archives.map((a,i)=>`<div class="yearcard"><strong>Archive — ${a.label}</strong><br><span class="muted">Clôturée le ${new Date(a.archivedAt).toLocaleDateString("fr-FR")}</span><div class="actions"><button class="btn secondary" onclick="loadArchive(${i})">Voir</button></div></div>`).join("");
- const p=data.promotions[selectedPromotion];
- if(!p){document.getElementById("promotionDetails").innerHTML="<p class='muted'>Sélectionne une promotion.</p>";return}
- document.getElementById("promotionDetails").innerHTML=["year1","year2"].map(y=>{
-  const yy=p[y], pc=progressPct(yy.sessions);
-  return `<div class="yearcard ${currentYearKey(p)===y?"active":""}">
-   <strong>${yy.label}</strong> — ${yy.status==="completed"?"Terminée":yy.status==="future"?"À venir":"En cours"}
-   <div class="progress" style="margin:8px 0"><span style="width:${pc}%"></span></div>
-   <span>${pc}%</span>
-   <div class="actions"><button class="btn secondary" onclick="openPromotionYear('${selectedPromotion}','${y}')">Voir la progression</button></div>
-  </div>`;
- }).join("");
-}
+function fillPromoSelect(id){const e=document.getElementById(id);if(!e)return;const old=e.value;e.innerHTML=promoKeys().map(k=>`<option value="${k}">${data.promotions[k].label}</option>`).join("");if(old&&data.promotions[old])e.value=old}
+function renderPlan(){fillPromoSelect("planPromo");const pk=document.getElementById("planPromo").value||promoKeys()[0],yk=document.getElementById("planYear").value,u=document.getElementById("planUnit").value,p=data.promotions[pk],list=p[yk].sessions.filter(s=>u==="ALL"||s.unit===u).sort((a,b)=>a.week-b.week||["TUE","THU","FRI"].indexOf(a.slot)-["TUE","THU","FRI"].indexOf(b.slot)),hs=hourStats(list);document.getElementById("planStats").innerHTML=`<span class="tag">${p[yk].label}</span><span class="tag">${list.length} séances</span><span class="tag">${hs.planned} h prévues</span><span class="tag">${hs.actual} h réalisées</span>`;document.getElementById("planTable").innerHTML=`<table><thead><tr><th>Sem.</th><th>Créneau</th><th>Unité</th><th>Séquence / objectif</th><th>Référentiel</th><th>État</th></tr></thead><tbody>${list.map(s=>`<tr><td>${s.week}</td><td>${s.slot==="TUE"?"Mardi 4 h":s.slot==="THU"?"Jeudi 4 h":"Vendredi 8 h"}</td><td>${s.unit}</td><td><strong>${s.title}</strong><br><span class="muted">${s.objective}</span></td><td>${s.competence}<br><span class="muted">${s.knowledge}</span></td><td class="status ${s.status}">${statusLabel(s.status)}<br><span class="muted">${s.actualHours||0}/${s.hours} h</span></td></tr>`).join("")}</tbody></table>`}
 
-function openPromotionYear(pk,yk){
- document.getElementById("progressCohort").value=pk;
- document.getElementById("progressYear").value=yk;
- renderProgression(); showView("progression");
-}
+function renderPromos(){document.getElementById("promoList").innerHTML=promoKeys().map(k=>{const p=data.promotions[k];return `<div class="slot" style="cursor:pointer" onclick="selectedPromo='${k}';renderPromos()"><strong>${p.label}</strong><br><span class="muted">${p.currentLevel===1?"1re année":"2e année"} · ${progress(currentYear(p).sessions)}%</span></div>`}).join("")+data.archives.map((a,i)=>`<div class="slot"><strong>Archive — ${a.label}</strong><br><span class="muted">${new Date(a.archivedAt).toLocaleDateString("fr-FR")}</span><div class="actions"><button class="btn secondary small" onclick="loadArchive(${i})">Générer</button></div></div>`).join("");const p=data.promotions[selectedPromo]||data.promotions[promoKeys()[0]];if(!p)return;document.getElementById("promoDetail").innerHTML=["year1","year2"].map(y=>{const yy=p[y],hs=hourStats(yy.sessions),pc=progress(yy.sessions);return `<div class="ref"><h3>${yy.label}</h3><div class="progress"><span style="width:${pc}%"></span></div><p><strong>${pc}%</strong> · ${hs.actual}/${hs.planned} h</p><p class="muted">${yy.status==="completed"?"Terminée":yy.status==="future"?"À venir":"En cours"}</p></div>`}).join("")}
 
-function fillPromoSelect(id){
- const el=document.getElementById(id); if(!el)return;
- const old=el.value;
- el.innerHTML=promoKeys().map(k=>`<option value="${k}">${data.promotions[k].label}</option>`).join("");
- if(old&&data.promotions[old])el.value=old;
-}
-function renderProgression(){
- fillPromoSelect("progressCohort");
- const pk=document.getElementById("progressCohort").value||promoKeys()[0];
- const yk=document.getElementById("progressYear").value;
- const ss=data.promotions[pk][yk].sessions;
- document.getElementById("progressTableWrap").innerHTML=`<table><thead><tr><th>Unité</th><th>Séquence</th><th>Durée</th><th>État</th><th>Action</th></tr></thead><tbody>
- ${ss.map(s=>`<tr><td>${s.unit}</td><td><strong>${s.title}</strong><br><span class="muted">${s.competence} · ${s.knowledge}</span></td><td>${s.hours} h</td><td class="status ${s.status}">${statusLabel(s.status)}</td>
- <td><button class="btn secondary" onclick="cycleStatus('${pk}','${yk}','${s.id}')">Changer</button></td></tr>`).join("")}</tbody></table>`;
- document.getElementById("unitBars").innerHTML=["U5","U6","U7","U8"].map(u=>{
-  const xs=ss.filter(s=>s.unit===u), pc=progressPct(xs);
-  return `<p><strong>${u}</strong> — ${pc}%</p><div class="progress"><span style="width:${pc}%"></span></div>`;
- }).join("");
-}
+function renderReferential(){document.getElementById("unitReferential").innerHTML=Object.entries(UNIT_REF).map(([u,v])=>`<div class="ref"><h3><span class="accent">${u}</span> — ${v.title}</h3>${v.c.map(x=>`<div>${x}</div>`).join("")}</div>`).join("");document.getElementById("knowledgeReferential").innerHTML=`<div class="refGrid">${Object.entries(KNOW).map(([k,v])=>`<div class="ref"><strong class="accent">${k}</strong> — ${v}</div>`).join("")}</div>`;const all=[...CURRICULUM.year1,...CURRICULUM.year2];document.getElementById("coverage").innerHTML=Object.keys(KNOW).map(k=>`<span class="tag">${k} : ${all.filter(s=>s.knowledge.includes(k)).length} séq.</span>`).join("")}
 
-function setStatus(pk,yk,id,status){
- const s=data.promotions[pk][yk].sessions.find(x=>x.id===id); if(s)s.status=status;
- saveData(); renderAll();
-}
-function cycleStatus(pk,yk,id){
- const s=data.promotions[pk][yk].sessions.find(x=>x.id===id); if(!s)return;
- s.status=s.status==="todo"?"partial":s.status==="partial"?"done":"todo";
- saveData(); renderAll();
-}
+function generateProgression(){fillPromoSelect("genPromo");const pk=document.getElementById("genPromo").value||promoKeys()[0],period=document.getElementById("genPeriod").value,u=document.getElementById("genUnit").value,mode=document.getElementById("genMode").value,p=data.promotions[pk],yrs=period==="two"?["year1","year2"]:[period];let out=`PROGRESSION PÉDAGOGIQUE — ${p.label}\nBTS Travaux Publics — U5, U6, U7, U8\nOrganisation : mardi 4 h U5 · jeudi 4 h U8 · vendredi 8 h U6/U7 · alternance 15 jours CFA / 15 jours entreprise\n\n`;if(mode==="inspection")out+=`PRINCIPES PÉDAGOGIQUES\nLa progression est organisée sur deux années. Elle articule acquisition progressive, projets, topographie, laboratoire, préparation de chantier et management. Les supports sont recherchés par matière dans Google Drive. Les heures réelles et reports permettent d’ajuster la progression sans perdre la trame initiale.\n\n`;yrs.forEach(y=>{let list=p[y].sessions.filter(s=>u==="ALL"||s.unit===u);if(mode==="actual")list=list.filter(s=>s.status!=="todo");out+=`${p[y].label.toUpperCase()}\nSem. CFA | Jour | Unité | Séquence | Compétence(s) | Savoir(s) | Objectif | Prévu | Réalisé | État\n`;out+=`---------|------|-------|----------|---------------|-----------|----------|-------|---------|-----\n`;list.sort((a,b)=>a.week-b.week||["TUE","THU","FRI"].indexOf(a.slot)-["TUE","THU","FRI"].indexOf(b.slot)).forEach(s=>out+=`${s.week} | ${s.slot==="TUE"?"Mardi":s.slot==="THU"?"Jeudi":"Vendredi"} | ${s.unit} | ${s.title} | ${s.competence} | ${s.knowledge} | ${s.objective} | ${s.hours} h | ${s.actualHours||0} h | ${statusLabel(s.status)}\n`);const hs=hourStats(list);out+=`\nSous-total : ${hs.planned} h prévues ; ${hs.actual} h réalisées.\n\n`});out+=`SYNTHÈSE\n`;["U5","U6","U7","U8"].forEach(unit=>{const l=yrs.flatMap(y=>p[y].sessions).filter(s=>s.unit===unit),hs=hourStats(l);out+=`${unit} : ${progress(l)}% · ${hs.actual}/${hs.planned} h\n`});document.getElementById("generatedText").value=out}
+async function copyGenerated(){if(!document.getElementById("generatedText").value)generateProgression();await navigator.clipboard.writeText(document.getElementById("generatedText").value);alert("Progression copiée pour Word.")}
+function loadArchive(i){const a=data.archives[i];let t=`ARCHIVE — ${a.label}\nClôturée le ${new Date(a.archivedAt).toLocaleDateString("fr-FR")}\n\n`;["year1","year2"].forEach(y=>{t+=a.promotion[y].label+"\n";a.promotion[y].sessions.forEach(s=>t+=`${s.week} | ${s.unit} | ${s.title} | ${statusLabel(s.status)} | ${s.actualHours||0}/${s.hours} h\n`);t+="\n"});document.getElementById("generatedText").value=t;showView("generator")}
 
+function renderSettings(){fillPromoSelect("cycleA");fillPromoSelect("rollPromo");document.getElementById("cycleA").value=data.settings.cycleA;document.getElementById("cycleAnchor").value=data.settings.cycleAnchor;document.getElementById("holidayMode").value=data.settings.holidayMode||"on";document.getElementById("archiveInfo").textContent=data.archives.length?`${data.archives.length} archive(s) disponibles.`:"Aucune archive."}
+function saveSettings(){data.settings.cycleA=document.getElementById("cycleA").value;data.settings.cycleAnchor=document.getElementById("cycleAnchor").value;data.settings.holidayMode=document.getElementById("holidayMode").value;saveData();renderAll();alert("Paramètres enregistrés.")}
+function rollAcademicSession(){const pk=document.getElementById("rollPromo").value,p=data.promotions[pk];if(!p||p.currentLevel!==2)return alert("Choisis la promotion de 2e année sortante.");if(!confirm(`Archiver ${p.label} et créer la nouvelle session ?`))return;data.archives.push({label:p.label,archivedAt:new Date().toISOString(),promotion:clone(p)});delete data.promotions[pk];const first=promoKeys().find(k=>data.promotions[k].currentLevel===1);if(first){data.promotions[first].currentLevel=2;data.promotions[first].year1.status="completed";data.promotions[first].year2.status="in_progress"}const start=Number(prompt("Année de rentrée de la nouvelle promotion :",new Date().getFullYear()+1))||new Date().getFullYear()+1,key=`PROMO_${start}_${start+2}`;data.promotions[key]={label:`Promotion ${start}-${start+2}`,currentLevel:1,year1:{label:`1re année ${start}-${start+1}`,status:"in_progress",sessions:clone(CURRICULUM.year1)},year2:{label:`2e année ${start+1}-${start+2}`,status:"future",sessions:clone(CURRICULUM.year2)}};data.settings.cycleA=key;data.settings.cycleAnchor=`${start}-09-01`;selectedPromo=first||key;saveData();renderAll();alert("Nouvelle session prête.")}
+function resetTracking(){const pk=document.getElementById("rollPromo").value,p=data.promotions[pk];if(!p)return;if(!confirm(`Réinitialiser tout le suivi de ${p.label} sans supprimer la progression ?`))return;["year1","year2"].forEach(y=>p[y].sessions.forEach(s=>{s.status="todo";s.actualHours=0;s.notes="";s.driveLinks=[]}));saveData();renderAll()}
+function exportBackup(){const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="bts-tp-pilot-v4-sauvegarde.json";a.click();URL.revokeObjectURL(a.href)}
+function importBackup(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);saveData();renderAll();alert("Sauvegarde importée.")}catch{alert("Fichier invalide.")}};r.readAsText(f)}
 
-let googleAccessToken=null;
-let googleTokenClient=null;
-let driveIndexCache={};
+function renderDrive(){document.getElementById("oauthClientId").value=data.settings.oauthClientId||"";document.getElementById("driveSources").innerHTML=data.settings.driveSources.map(s=>`<div class="ref"><strong>${s.name}</strong><br><span class="muted">${s.id}</span></div>`).join("");document.getElementById("driveSource").innerHTML='<option value="ALL">Toutes les sources</option>'+data.settings.driveSources.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");updateDriveUI()}
+function openMainDrive(){window.open(`https://drive.google.com/drive/folders/${MAIN_DRIVE}`,"_blank")}
+function saveOAuth(){data.settings.oauthClientId=document.getElementById("oauthClientId").value.trim();saveData();initGoogleIdentity();alert("Client OAuth enregistré.")}
+function loadGIS(){return new Promise((res,rej)=>{if(window.google?.accounts?.oauth2)return res();const s=document.createElement("script");s.src="https://accounts.google.com/gsi/client";s.async=true;s.defer=true;s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
+async function initGoogleIdentity(){if(!data.settings.oauthClientId)return false;try{await loadGIS();tokenClient=google.accounts.oauth2.initTokenClient({client_id:data.settings.oauthClientId,scope:"https://www.googleapis.com/auth/drive.readonly",callback:r=>{if(r.error)return alert("Connexion refusée.");driveToken=r.access_token;sessionStorage.setItem("btstp_drive_token",driveToken);updateDriveUI()}});return true}catch{return false}}
+async function connectGoogleDrive(){if(!data.settings.oauthClientId)return alert("Ajoute d’abord le Client ID OAuth.");if(await initGoogleIdentity())tokenClient.requestAccessToken({prompt:"consent"})}
+function disconnectGoogleDrive(){driveToken=null;sessionStorage.removeItem("btstp_drive_token");driveCache={};updateDriveUI()}
+function updateDriveUI(){const d=document.getElementById("driveDot"),t=document.getElementById("driveStatus");if(!d||!t)return;if(driveToken){d.classList.add("ok");t.textContent="Connecté — recherche active"}else{d.classList.remove("ok");t.textContent="Non connecté à Google Drive"}}
+function quickSearch(q){document.getElementById("driveQuery").value=q;searchDrive()}
+function searchFromSession(pk,yk,id){const s=findSession(pk,yk,id);showView("drive");document.getElementById("driveQuery").value=s.driveQuery||s.theme;window._targetSession={pk,yk,id};if(driveToken)searchDrive()}
+async function api(url){const r=await fetch(url,{headers:{Authorization:"Bearer "+driveToken}});if(!r.ok)throw new Error("Drive "+r.status);return r.json()}
+async function sourceType(s){try{await api(`https://www.googleapis.com/drive/v3/drives/${encodeURIComponent(s.id)}?fields=id`);return"shared"}catch{return"folder"}}
+async function searchShared(s,q){const qq=`trashed = false and name contains '${q.replace(/'/g,"\\'")}'`,u=`https://www.googleapis.com/drive/v3/files?corpora=drive&driveId=${encodeURIComponent(s.id)}&includeItemsFromAllDrives=true&supportsAllDrives=true&pageSize=100&fields=files(id,name,mimeType,webViewLink,parents)&q=${encodeURIComponent(qq)}`;const j=await api(u);return (j.files||[]).map(f=>({...f,source:s.name,path:s.name}))}
+async function children(id){const q=`'${id}' in parents and trashed = false`,u=`https://www.googleapis.com/drive/v3/files?includeItemsFromAllDrives=true&supportsAllDrives=true&pageSize=100&fields=files(id,name,mimeType,webViewLink,parents)&q=${encodeURIComponent(q)}`;return (await api(u)).files||[]}
+async function indexFolder(s){if(driveCache[s.id])return driveCache[s.id];const q=[{id:s.id,path:s.name}],out=[],seen=new Set();while(q.length&&out.length<2500){const cur=q.shift();if(seen.has(cur.id))continue;seen.add(cur.id);let ch=[];try{ch=await children(cur.id)}catch{}for(const f of ch){const it={...f,source:s.name,path:cur.path};out.push(it);if(f.mimeType==="application/vnd.google-apps.folder")q.push({id:f.id,path:cur.path+" / "+f.name})}}driveCache[s.id]=out;return out}
+async function searchFolder(s,q){const idx=await indexFolder(s),t=q.toLowerCase();return idx.filter(f=>(f.name||"").toLowerCase().includes(t)||(f.path||"").toLowerCase().includes(t)).slice(0,150)}
+async function searchDrive(){const q=document.getElementById("driveQuery").value.trim();if(!q)return;if(!driveToken)return alert("Connecte Google Drive.");const chosen=document.getElementById("driveSource").value,sources=data.settings.driveSources.filter(s=>chosen==="ALL"||s.id===chosen);document.getElementById("driveInfo").textContent="Recherche en cours…";let all=[];for(const s of sources){try{all.push(...((await sourceType(s))==="shared"?await searchShared(s,q):await searchFolder(s,q)))}catch(e){console.error(e)}}all.sort((a,b)=>data.settings.driveSources.findIndex(s=>s.name===a.source)-data.settings.driveSources.findIndex(s=>s.name===b.source));window._driveResults=all;document.getElementById("driveInfo").textContent=`${all.length} résultat(s)`;document.getElementById("driveResults").innerHTML=all.slice(0,100).map((r,i)=>`<div class="result"><div class="resultTop"><div><strong>${r.mimeType==="application/vnd.google-apps.folder"?"📁":"📄"} ${escapeHtml(r.name)}</strong><div class="path">${escapeHtml(r.path+" / "+r.name)}</div></div><span class="sourceBadge">${escapeHtml(r.source)}</span></div><div class="actions"><button class="btn secondary small" onclick="window.open('${r.webViewLink||`https://drive.google.com/open?id=${r.id}`}','_blank')">Ouvrir</button><button class="btn secondary small" onclick="attachResult(${i})">Associer</button></div></div>`).join("")||"<p class='muted'>Aucun résultat.</p>"}
+function attachResult(i){const r=window._driveResults?.[i],t=window._targetSession;if(!r||!t)return alert("Lance la recherche depuis une séance pour associer automatiquement.");const s=findSession(t.pk,t.yk,t.id),url=r.webViewLink||(r.mimeType==="application/vnd.google-apps.folder"?`https://drive.google.com/drive/folders/${r.id}`:`https://drive.google.com/open?id=${r.id}`);s.driveLinks=[{name:r.name,url,source:r.source}];saveData();renderAll();alert("Ressource associée.")}
 
-function ensureDriveSources(){
-  if(!data.settings.driveSources || !Array.isArray(data.settings.driveSources) || !data.settings.driveSources.length){
-    data.settings.driveSources=[{name:"BTS andy",id:DRIVE_DEFAULT_ID,priority:1,enabled:true}];
-    saveData();
-  }
-  // Migration: force BTS andy as first source.
-  let main=data.settings.driveSources.find(s=>s.id===DRIVE_DEFAULT_ID);
-  if(!main){
-    data.settings.driveSources.unshift({name:"BTS andy",id:DRIVE_DEFAULT_ID,priority:1,enabled:true});
-    saveData();
-  }
-}
-function renderDrive(){
-  ensureDriveSources();
-  document.getElementById("oauthClientId").value=data.settings.oauthClientId||"";
-  renderDriveSources();
-  renderDriveSearchSources();
-  updateDriveConnectionUI();
-}
-function renderDriveSources(){
-  const wrap=document.getElementById("driveSources");
-  if(!wrap)return;
-  wrap.innerHTML=data.settings.driveSources.map((s,i)=>`
-    <div class="source-row">
-      <div><strong>${escapeHtml(s.name)}</strong><br><span class="muted">${escapeHtml(s.id)}</span></div>
-      <select onchange="setSourceEnabled(${i},this.value==='1')">
-        <option value="1" ${s.enabled!==false?"selected":""}>Active</option>
-        <option value="0" ${s.enabled===false?"selected":""}>Inactive</option>
-      </select>
-      ${i===0?'<span class="source-badge">Prioritaire</span>':`<button class="btn danger" onclick="removeDriveSource(${i})">×</button>`}
-    </div>`).join("");
-}
-function renderDriveSearchSources(){
-  const sel=document.getElementById("driveSearchSource");
-  if(!sel)return;
-  const active=data.settings.driveSources.filter(s=>s.enabled!==false);
-  sel.innerHTML=`<option value="ALL">Toutes les sources</option>`+active.map((s,i)=>`<option value="${escapeHtml(s.id)}">${escapeHtml(s.name)}</option>`).join("");
-}
-function addDriveSource(){
-  const name=document.getElementById("newSourceName").value.trim();
-  const id=document.getElementById("newSourceId").value.trim();
-  if(!name||!id){alert("Renseigne un nom et un ID.");return}
-  data.settings.driveSources.push({name,id,priority:data.settings.driveSources.length+1,enabled:true});
-  document.getElementById("newSourceName").value="";
-  document.getElementById("newSourceId").value="";
-  saveData();renderDrive();
-}
-function removeDriveSource(i){
-  if(i===0)return;
-  if(!confirm("Supprimer cette source de recherche ?"))return;
-  data.settings.driveSources.splice(i,1);saveData();renderDrive();
-}
-function setSourceEnabled(i,enabled){
-  data.settings.driveSources[i].enabled=enabled;saveData();renderDriveSearchSources();
-}
-function saveOAuthClient(){
-  data.settings.oauthClientId=document.getElementById("oauthClientId").value.trim();
-  saveData();
-  initGoogleIdentity();
-  alert("Client OAuth enregistré.");
-}
-function openDrive(){window.open("https://drive.google.com/drive/folders/"+DRIVE_DEFAULT_ID,"_blank")}
-function openClassroom(){window.open("https://classroom.google.com/","_blank")}
-
-function loadGoogleIdentityScript(){
-  return new Promise((resolve,reject)=>{
-    if(window.google?.accounts?.oauth2){resolve();return}
-    const existing=document.querySelector('script[data-gis="1"]');
-    if(existing){existing.addEventListener("load",resolve,{once:true});return}
-    const s=document.createElement("script");
-    s.src="https://accounts.google.com/gsi/client";
-    s.async=true;s.defer=true;s.dataset.gis="1";
-    s.onload=resolve;s.onerror=()=>reject(new Error("Impossible de charger Google Identity Services"));
-    document.head.appendChild(s);
-  });
-}
-async function initGoogleIdentity(){
-  if(!data.settings.oauthClientId)return false;
-  try{
-    await loadGoogleIdentityScript();
-    googleTokenClient=google.accounts.oauth2.initTokenClient({
-      client_id:data.settings.oauthClientId,
-      scope:"https://www.googleapis.com/auth/drive.readonly",
-      callback:(resp)=>{
-        if(resp.error){alert("Connexion Google refusée : "+resp.error);return}
-        googleAccessToken=resp.access_token;
-        sessionStorage.setItem("btstp_drive_token",googleAccessToken);
-        updateDriveConnectionUI();
-      }
-    });
-    return true;
-  }catch(e){console.error(e);return false}
-}
-async function connectGoogleDrive(){
-  if(!data.settings.oauthClientId){
-    alert("Ajoute d’abord ton OAuth Client ID Google dans la colonne de droite.");
-    return;
-  }
-  const ok=await initGoogleIdentity();
-  if(ok) googleTokenClient.requestAccessToken({prompt:"consent"});
-}
-function disconnectGoogleDrive(){
-  googleAccessToken=null;sessionStorage.removeItem("btstp_drive_token");driveIndexCache={};updateDriveConnectionUI();
-}
-function updateDriveConnectionUI(){
-  const dot=document.getElementById("driveDot"),txt=document.getElementById("driveStatusText");
-  if(!dot||!txt)return;
-  if(googleAccessToken){dot.classList.add("ok");txt.textContent="Connecté à Google Drive — recherche active";}
-  else{dot.classList.remove("ok");txt.textContent="Non connecté à Google Drive";}
-}
-function quickSearch(term){
-  document.getElementById("driveSearchInput").value=term;
-  searchDrive();
-}
-function escapeHtml(str){
-  return String(str??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-}
-function escapeDriveQuery(str){
-  return String(str).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
-}
-async function driveFetch(url){
-  if(!googleAccessToken) throw new Error("NOT_CONNECTED");
-  const r=await fetch(url,{headers:{Authorization:"Bearer "+googleAccessToken}});
-  if(r.status===401){googleAccessToken=null;sessionStorage.removeItem("btstp_drive_token");updateDriveConnectionUI();throw new Error("TOKEN_EXPIRED")}
-  if(!r.ok) throw new Error("DRIVE_"+r.status);
-  return r.json();
-}
-async function detectSourceType(source){
-  try{
-    await driveFetch(`https://www.googleapis.com/drive/v3/drives/${encodeURIComponent(source.id)}?fields=id,name`);
-    return "sharedDrive";
-  }catch(e){
-    if(["NOT_CONNECTED","TOKEN_EXPIRED"].includes(e.message))throw e;
-    return "folder";
-  }
-}
-async function searchSharedDrive(source,term){
-  const q=`trashed = false and name contains '${escapeDriveQuery(term)}'`;
-  let url=`https://www.googleapis.com/drive/v3/files?corpora=drive&driveId=${encodeURIComponent(source.id)}&includeItemsFromAllDrives=true&supportsAllDrives=true&pageSize=100&fields=nextPageToken,files(id,name,mimeType,webViewLink,parents,modifiedTime)&q=${encodeURIComponent(q)}`;
-  const out=[];
-  for(let pages=0;url&&pages<4;pages++){
-    const j=await driveFetch(url);
-    out.push(...(j.files||[]).map(f=>({...f,source:source.name,sourceId:source.id})));
-    url=j.nextPageToken?url.replace(/([?&])pageToken=[^&]*/,"").replace(/&$/,"")+`&pageToken=${encodeURIComponent(j.nextPageToken)}`:null;
-  }
-  return out;
-}
-async function listFolderChildren(folderId){
-  let url=`https://www.googleapis.com/drive/v3/files?includeItemsFromAllDrives=true&supportsAllDrives=true&pageSize=100&fields=nextPageToken,files(id,name,mimeType,webViewLink,parents,modifiedTime)&q=${encodeURIComponent(`'${escapeDriveQuery(folderId)}' in parents and trashed = false`)}`;
-  const out=[];
-  for(let pages=0;url&&pages<5;pages++){
-    const j=await driveFetch(url);out.push(...(j.files||[]));
-    url=j.nextPageToken?url+`&pageToken=${encodeURIComponent(j.nextPageToken)}`:null;
-  }
-  return out;
-}
-async function buildFolderIndex(source){
-  if(driveIndexCache[source.id])return driveIndexCache[source.id];
-  const queue=[{id:source.id,path:source.name}], indexed=[];
-  const seen=new Set();
-  while(queue.length && indexed.length<2500){
-    const cur=queue.shift();
-    if(seen.has(cur.id))continue;seen.add(cur.id);
-    let children=[];
-    try{children=await listFolderChildren(cur.id)}catch(e){console.warn(e);continue}
-    for(const f of children){
-      const item={...f,source:source.name,sourceId:source.id,path:cur.path};
-      indexed.push(item);
-      if(f.mimeType==="application/vnd.google-apps.folder"){
-        queue.push({id:f.id,path:cur.path+" / "+f.name});
-      }
-    }
-  }
-  driveIndexCache[source.id]=indexed;
-  return indexed;
-}
-async function searchFolderRecursive(source,term){
-  const idx=await buildFolderIndex(source);
-  const t=term.toLowerCase();
-  return idx.filter(f=>(f.name||"").toLowerCase().includes(t) || (f.path||"").toLowerCase().includes(t)).slice(0,150);
-}
-async function resolvePath(item){
-  if(item.path)return item.path+" / "+item.name;
-  return item.source+" / "+item.name;
-}
-function fileIcon(mime){
-  if(mime==="application/vnd.google-apps.folder")return "📁";
-  if((mime||"").includes("pdf"))return "📕";
-  if((mime||"").includes("presentation"))return "📊";
-  if((mime||"").includes("spreadsheet"))return "📈";
-  if((mime||"").includes("document")||(mime||"").includes("word"))return "📄";
-  return "📎";
-}
-async function searchDrive(){
-  const term=document.getElementById("driveSearchInput").value.trim();
-  if(!term){alert("Entre une matière ou un mot-clé.");return}
-  if(!googleAccessToken){
-    alert("Connecte d’abord l’application à Google Drive.");
-    return;
-  }
-  const chosen=document.getElementById("driveSearchSource").value;
-  let sources=data.settings.driveSources.filter(s=>s.enabled!==false);
-  if(chosen!=="ALL")sources=sources.filter(s=>s.id===chosen);
-  // Priority order: BTS andy first
-  sources.sort((a,b)=>(a.priority||99)-(b.priority||99));
-  document.getElementById("driveSearchInfo").textContent="Recherche en cours dans "+sources.map(s=>s.name).join(", ")+"…";
-  document.getElementById("driveSearchResults").innerHTML="";
-  let all=[];
-  for(const source of sources){
-    try{
-      const type=await detectSourceType(source);
-      const results=type==="sharedDrive"?await searchSharedDrive(source,term):await searchFolderRecursive(source,term);
-      all.push(...results.map(r=>({...r,sourceType:type})));
-    }catch(e){
-      console.error(e);
-      if(e.message==="TOKEN_EXPIRED"){alert("La session Google a expiré. Reconnecte-toi.");return}
-    }
-  }
-  // Ranking: priority source, exact starts/contains
-  const priorities=Object.fromEntries(data.settings.driveSources.map((s,i)=>[s.id,i]));
-  const tl=term.toLowerCase();
-  all.sort((a,b)=>{
-    const pa=priorities[a.sourceId]??99,pb=priorities[b.sourceId]??99;
-    if(pa!==pb)return pa-pb;
-    const an=(a.name||"").toLowerCase(),bn=(b.name||"").toLowerCase();
-    const sa=an===tl?0:an.startsWith(tl)?1:an.includes(tl)?2:3;
-    const sb=bn===tl?0:bn.startsWith(tl)?1:bn.includes(tl)?2:3;
-    return sa-sb||an.localeCompare(bn);
-  });
-  document.getElementById("driveSearchInfo").textContent=`${all.length} résultat(s) trouvé(s) pour « ${term} »`;
-  renderDriveResults(all.slice(0,100));
-}
-function renderDriveResults(results){
-  const wrap=document.getElementById("driveSearchResults");
-  if(!results.length){wrap.innerHTML=`<div class="result"><span class="muted">Aucun résultat dans les sources sélectionnées.</span></div>`;return}
-  window._lastDriveResults=results;
-  wrap.innerHTML=results.map((r,i)=>{
-    const url=r.webViewLink || (r.mimeType==="application/vnd.google-apps.folder"?`https://drive.google.com/drive/folders/${r.id}`:`https://drive.google.com/open?id=${r.id}`);
-    const p=r.path?`${r.path} / ${r.name}`:`${r.source} / ${r.name}`;
-    return `<div class="result">
-      <div class="result-top">
-        <div><strong>${fileIcon(r.mimeType)} ${escapeHtml(r.name)}</strong><div class="path">${escapeHtml(p)}</div></div>
-        <span class="source-badge">${escapeHtml(r.source)}</span>
-      </div>
-      <div class="actions">
-        <button class="btn secondary" onclick="window.open('${url.replace(/'/g,"\\'")}','_blank')">Ouvrir</button>
-        <button class="btn secondary" onclick="attachDriveResult(${i})">Associer à la prochaine séance</button>
-      </div>
-    </div>`;
-  }).join("");
-}
-function attachDriveResult(i){
-  const r=window._lastDriveResults?.[i]; if(!r)return;
-  const pk=currentCfaPromotionKey(), p=data.promotions[pk], y=currentYear(p);
-  const unit=unitForDay(new Date().getDay())||"U5";
-  const s=y.sessions.find(x=>x.unit===unit&&x.status!=="done")||y.sessions.find(x=>x.status!=="done");
-  if(!s){alert("Aucune séance disponible.");return}
-  s.driveLink=r.webViewLink || (r.mimeType==="application/vnd.google-apps.folder"?`https://drive.google.com/drive/folders/${r.id}`:`https://drive.google.com/open?id=${r.id}`);
-  s.driveTitle=r.name;
-  s.driveSource=r.source;
-  saveData();renderAll();
-  alert(`Ressource « ${r.name} » associée à la séance « ${s.title} ».`);
-}
-function openSessionResource(s){
-  if(s.driveLink){window.open(s.driveLink,"_blank");return}
-  showView("drive");
-  document.getElementById("driveSearchInput").value=s.topic||s.title;
-}
-function syncGeneratorSelectors(){
- fillPromoSelect("genCohort");
- const current=currentCfaPromotionKey();
- if(document.getElementById("genCohort"))document.getElementById("genCohort").value=current;
-}
-function generateProgression(){
- const pk=document.getElementById("genCohort").value;
- const period=document.getElementById("genPeriod").value;
- const format=document.getElementById("genFormat").value;
- const unit=document.getElementById("genUnit").value;
- const p=data.promotions[pk];
- let yearKeys=period==="twoYears"?["year1","year2"]:[period];
- let out=`PROGRESSION PÉDAGOGIQUE — ${p.label}\n`;
- out+=`Parcours complet BTS Travaux Publics sur 2 ans\n`;
- out+=`Organisation CFA : mardi 4 h U5 · jeudi 4 h U8 · vendredi 8 h ${data.settings.fridayDefault} par défaut, avec alternance ponctuelle U7.\n`;
- out+=`Rythme : 15 jours CFA / 15 jours entreprise, en alternance avec l’autre promotion.\n\n`;
- if(format==="inspection"){
-  out+=`PRINCIPES PÉDAGOGIQUES\n`;
-  out+=`La progression est conçue sur deux années et articule les unités U5, U6, U7 et U8. Les séquences s’appuient sur des situations professionnelles, des projets, des activités de topographie et de laboratoire. Les ressources sont conservées dans Google Drive et diffusées aux étudiants via Google Classroom.\n\n`;
- }
- yearKeys.forEach(yk=>{
-  const yy=p[yk];
-  let ss=yy.sessions.filter(s=>unit==="ALL"||s.unit===unit);
-  if(format==="realisee")ss=ss.filter(s=>s.status==="done"||s.status==="partial");
-  out+=`${yy.label.toUpperCase()}\n`;
-  out+=`Unité | Séquence / thème | Compétence | Savoirs associés | Durée | État\n`;
-  out+=`------|-------------------|------------|------------------|-------|-----\n`;
-  ss.forEach(s=>out+=`${s.unit} | ${s.title} | ${s.competence} | ${s.knowledge} | ${s.hours} h | ${statusLabel(s.status)}\n`);
-  out+=`\n`;
- });
- out+=`SYNTHÈSE DE COUVERTURE\n`;
- ["U5","U6","U7","U8"].forEach(u=>{
-  const all=yearKeys.flatMap(yk=>p[yk].sessions).filter(s=>s.unit===u);
-  out+=`${u} : ${progressPct(all)}%\n`;
- });
- document.getElementById("generatedText").value=out;
-}
-async function copyGenerated(){
- if(!document.getElementById("generatedText").value)generateProgression();
- await navigator.clipboard.writeText(document.getElementById("generatedText").value);
- alert("Progression copiée pour Word.");
-}
-
-function renderSettings(){
- fillPromoSelect("cycleA"); fillPromoSelect("archiveCohort");
- document.getElementById("cycleA").value=data.settings.cycleA;
- document.getElementById("cycleAnchor").value=data.settings.cycleAnchor;
- document.getElementById("fridayDefault").value=data.settings.fridayDefault;
- document.getElementById("archiveInfo").textContent=data.archives.length?`${data.archives.length} promotion(s) archivée(s).`:"Aucune promotion archivée.";
-}
-function saveSettings(){
- data.settings.cycleA=document.getElementById("cycleA").value;
- data.settings.cycleAnchor=document.getElementById("cycleAnchor").value;
- data.settings.fridayDefault=document.getElementById("fridayDefault").value;
- saveData();renderAll();alert("Paramètres enregistrés.");
-}
-function archivePromotion(){
- const pk=document.getElementById("archiveCohort").value, p=data.promotions[pk];
- if(!confirm(`Clôturer ${p.label} et archiver ses deux années complètes ?`))return;
- data.archives.push({label:p.label,archivedAt:new Date().toISOString(),promotion:structuredClone(p)});
- delete data.promotions[pk];
- if(data.settings.cycleA===pk)data.settings.cycleA=promoKeys()[0]||"";
- if(selectedPromotion===pk)selectedPromotion=promoKeys()[0]||"";
- saveData();renderAll();alert("Promotion archivée. Sa progression reste disponible dans les archives.");
-}
-function hardResetPromotion(){
- const pk=document.getElementById("archiveCohort").value, p=data.promotions[pk];
- if(!confirm(`Remettre à zéro le suivi de ${p.label} sans créer d’archive ?`))return;
- if(!confirm("Confirmer une seconde fois."))return;
- ["year1","year2"].forEach(yk=>p[yk].sessions.forEach(s=>s.status="todo"));
- saveData();renderAll();alert("Suivi remis à zéro.");
-}
-function loadArchive(i){
- const a=data.archives[i];
- let out=`ARCHIVE — ${a.label}\nClôturée le ${new Date(a.archivedAt).toLocaleDateString("fr-FR")}\n\n`;
- ["year1","year2"].forEach(yk=>{
-  out+=a.promotion[yk].label.toUpperCase()+"\n";
-  a.promotion[yk].sessions.forEach(s=>out+=`${s.unit} | ${s.title} | ${statusLabel(s.status)}\n`);
-  out+="\n";
- });
- document.getElementById("generatedText").value=out; showView("generator");
-}
-
-function exportBackup(){
- const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
- const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bts-tp-pilot-v2-sauvegarde.json";a.click();URL.revokeObjectURL(a.href);
-}
-function importBackup(e){
- const f=e.target.files[0];if(!f)return;
- const r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);saveData();renderAll();alert("Sauvegarde importée.");}catch{alert("Fichier invalide.");}};r.readAsText(f);
-}
-
-
-function migrateData() {
-  if(!data.settings.driveSources) data.settings.driveSources=[{name:"BTS andy",id:DRIVE_DEFAULT_ID,priority:1,enabled:true}];
-  let changed=false;
-  if(!data.settings) data.settings={};
-  if(!data.settings.driveFolderId || data.settings.driveFolderId==="0AJGPXCEfotQeUk9PVA") {
-    data.settings.driveFolderId="0AJGPXCEfotQeUk9PVA";
-    changed=true;
-  }
-  if(Array.isArray(data.resources)) {
-    data.resources.forEach(r=>{
-      if(typeof r.url==="string" && r.url.includes("0AJGPXCEfotQeUk9PVA")) {
-        r.url=r.url.replace("0AJGPXCEfotQeUk9PVA","0AJGPXCEfotQeUk9PVA");
-        if(r.title==="Dossier BTS") r.title="Dossier BTS andy";
-        changed=true;
-      }
-    });
-  }
-  if(changed) saveData();
-}
-
-function renderAll(){
- renderHome();renderWeek();renderPromotions();renderProgression();renderDrive();renderSettings();syncGeneratorSelectors();
-}
-migrateData();
-googleAccessToken=sessionStorage.getItem("btstp_drive_token")||null;
-renderAll();
-initGoogleIdentity();
-if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{})}
+function renderAll(){renderHome();renderWeek();renderPlan();renderPromos();renderReferential();renderDrive();renderSettings();fillPromoSelect("genPromo")}
+renderAll();initGoogleIdentity();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
 </script>
-</body>
-</html>
+</body></html>

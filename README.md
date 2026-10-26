@@ -1,45 +1,27 @@
-# BTS TP Pilot V3
+# BTS TP Pilot V4
 
-## Nouveauté majeure
-La V3 ajoute une vraie recherche Google Drive depuis l'application.
+Version pédagogique complète.
 
-### Fonctionnement
-- Source prioritaire : Drive partagé `BTS andy`
-- Recherche par matière : topographie, terrassement, assainissement, laboratoire, chaussée, réseaux, béton, implantation...
-- Recherche dans tous les sous-dossiers
-- Support de plusieurs sources Drive
-- Priorité automatique à `BTS andy`
-- Affichage de la source de chaque résultat
-- Association d'un fichier/dossier trouvé à une séance
-- Conservation du suivi pédagogique sur 2 ans
-
-## Dossier principal
-BTS andy
-ID : `0AJGPXCEfotQeUk9PVA`
-
-## Connexion Google Drive obligatoire pour la recherche
-Pour que GitHub Pages puisse lire le Drive privé :
-1. Créer un projet sur Google Cloud Console.
-2. Activer Google Drive API.
-3. Configurer l'écran de consentement OAuth.
-4. Créer un identifiant OAuth 2.0 de type "Application Web".
-5. Ajouter l'URL de ton site GitHub Pages dans "Origines JavaScript autorisées".
-6. Copier le Client ID `...apps.googleusercontent.com`.
-7. Dans l'application : Drive -> OAuth Client ID Google -> Enregistrer.
-8. Cliquer "Se connecter à Google Drive".
-
-L'application demande uniquement la portée `drive.readonly`.
+## Structure
+- 18 semaines CFA par année
+- 16 h par semaine CFA : mardi U5 4 h, jeudi U8 4 h, vendredi U6/U7 8 h
+- 288 h/an, 576 h sur 2 ans
+- U7 inséré automatiquement dans les vendredis U6
+- progression 1re et 2e année conservée par promotion
+- historique de la 1re année des BTS 2 déjà présent
+- génération de progression 1 an / 2 ans / par unité
+- distinction prévu / réalisé / reporté
+- notes pédagogiques et heures réelles
+- recherche Google Drive multi-sources par matière
+- BTS andy prioritaire, ancien Drive secondaire
+- archivage complet des promotions en fin de cycle
+- création automatique d’une nouvelle promotion
 
 ## Déploiement GitHub Pages
-Remplacer les anciens fichiers par :
-- `index.html`
-- `manifest.webmanifest`
-- `sw.js`
+Remplacer les fichiers du dépôt par :
+- index.html
+- manifest.webmanifest
+- sw.js
+- logo-bts-tp-pilot.png
 
-Puis recharger le site.
-
-
-## Identité visuelle
-- nouveau logo BTS TP Pilot intégré dans l'en-tête
-- logo utilisé comme icône PWA
-- écran d'accueil enrichi avec le logo
+L’application conserve les données dans localStorage. Export JSON conseillé régulièrement.
