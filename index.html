@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#17191b">
-<title>BTS TP Pilot V2</title>
+<title>BTS TP Pilot V3</title>
 <link rel="manifest" href="manifest.webmanifest">
 <style>
 :root{
@@ -56,14 +56,44 @@ th{color:var(--accent)}
   .span4,.span5,.span6,.span7,.span8{grid-column:span 12}
   .top{align-items:flex-start;flex-direction:column}
 }
+
+.drive-status{display:flex;align-items:center;gap:8px;margin:10px 0}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--danger);display:inline-block}
+.dot.ok{background:var(--ok)}
+.searchbar{display:grid;grid-template-columns:1fr 180px auto;gap:8px;margin:12px 0}
+.result{padding:12px;background:#1c1f21;border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
+.result-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.path{font-size:12px;color:var(--muted);margin-top:4px;word-break:break-word}
+.source-badge{background:#111315;border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:3px 7px;font-size:11px;font-weight:800}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{background:#111315;border:1px solid var(--line);color:var(--txt);padding:6px 9px;border-radius:999px;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.source-row{display:grid;grid-template-columns:1fr 180px auto;gap:8px;align-items:end;margin-bottom:10px}
+@media(max-width:900px){.searchbar,.source-row{grid-template-columns:1fr}}
+
+
+.logo-wrap{display:flex;align-items:center;gap:14px}
+.app-logo{
+  width:68px;height:68px;border-radius:18px;object-fit:cover;
+  box-shadow:0 8px 24px rgba(223,255,0,.18);
+  border:1px solid rgba(255,255,255,.08)
+}
+.brandline{display:flex;flex-direction:column}
+.brand-kicker{font-size:12px;text-transform:uppercase;letter-spacing:1.3px;color:var(--muted)}
+.splash-logo{width:120px;height:120px;border-radius:28px;object-fit:cover;display:block;margin:0 auto 16px}
+
 </style>
 </head>
 <body>
 <div class="app">
   <div class="top">
-    <div class="brand">
-      <h1>BTS TP <span class="accent">PILOT V2</span></h1>
-      <div class="muted">Assistant pédagogique sur 2 ans — promotions, progression, Drive, Classroom</div>
+    <div class="logo-wrap">
+      <img src="./logo-bts-tp-pilot.png" alt="Logo BTS TP Pilot" class="app-logo">
+      <div class="brand brandline">
+        <div class="brand-kicker">Travaux Publics</div>
+        <h1>BTS TP <span class="accent">PILOT V3</span></h1>
+        <div class="muted">Assistant pédagogique sur 2 ans — promotions, progression, Drive, Classroom</div>
+      </div>
     </div>
     <div id="cohortPill" class="pill">Chargement…</div>
   </div>
@@ -79,6 +109,11 @@ th{color:var(--accent)}
   </div>
 
   <section id="home" class="view active">
+    <div class="card" style="margin-bottom:14px;text-align:center">
+      <img src="./logo-bts-tp-pilot.png" alt="BTS TP Pilot" class="splash-logo">
+      <strong style="font-size:20px">BTS TP Pilot</strong>
+      <div class="muted">Pilotage pédagogique • progression • Drive • Classroom</div>
+    </div>
     <div class="grid">
       <div class="card span8">
         <h2 id="todayTitle">Aujourd’hui</h2>
@@ -148,31 +183,69 @@ th{color:var(--accent)}
     </div>
   </section>
 
-  <section id="drive" class="view">
-    <div class="grid">
-      <div class="card span8">
-        <h2>Drive BTS andy</h2>
-        <div class="notice">
-          Dossier principal préconfiguré : <strong>BTS andy</strong>. Le prototype conserve les liens vers les ressources et ouvre directement le bon dossier.
-        </div>
-        <div class="actions">
-          <button class="btn" onclick="openDrive()">Ouvrir Drive BTS andy</button>
-          <button class="btn secondary" onclick="openClassroom()">Ouvrir Classroom</button>
-        </div>
-        <div id="driveResources" style="margin-top:14px"></div>
+  
+<section id="drive" class="view">
+  <div class="grid">
+    <div class="card span8">
+      <h2>Recherche Drive pédagogique</h2>
+      <div class="notice">
+        Source prioritaire : <strong>BTS andy</strong>. La recherche peut parcourir tout le Drive partagé et ses sous-dossiers.
       </div>
-      <div class="card span4">
-        <h3>Connexion Drive</h3>
-        <label>ID du dossier BTS</label>
-        <input id="driveFolderId">
-        <label>OAuth Client ID Google</label>
-        <input id="oauthClientId" placeholder="xxxx.apps.googleusercontent.com">
-        <button class="btn" style="margin-top:12px" onclick="saveDriveSettings()">Enregistrer</button>
-        <button class="btn secondary" style="margin-top:8px" onclick="resetDriveTarget()">Réinitialiser vers BTS andy</button>
-        <p class="muted">Le Client ID sera utile lorsque la PWA sera hébergée et que tu voudras une vraie synchronisation automatique.</p>
+
+      <div class="drive-status">
+        <span id="driveDot" class="dot"></span>
+        <strong id="driveStatusText">Non connecté à Google Drive</strong>
       </div>
+
+      <div class="actions">
+        <button class="btn" onclick="connectGoogleDrive()">Se connecter à Google Drive</button>
+        <button class="btn secondary" onclick="disconnectGoogleDrive()">Déconnecter</button>
+        <button class="btn secondary" onclick="openDrive()">Ouvrir BTS andy</button>
+        <button class="btn secondary" onclick="openClassroom()">Classroom</button>
+      </div>
+
+      <h3 style="margin-top:18px">Recherche par matière / projet</h3>
+      <div class="chips">
+        <button class="chip" onclick="quickSearch('topographie')">Topographie</button>
+        <button class="chip" onclick="quickSearch('terrassement')">Terrassement</button>
+        <button class="chip" onclick="quickSearch('assainissement')">Assainissement</button>
+        <button class="chip" onclick="quickSearch('laboratoire')">Laboratoire</button>
+        <button class="chip" onclick="quickSearch('chaussée')">Chaussées</button>
+        <button class="chip" onclick="quickSearch('réseaux')">Réseaux</button>
+        <button class="chip" onclick="quickSearch('béton')">Béton</button>
+        <button class="chip" onclick="quickSearch('implantation')">Implantation</button>
+      </div>
+
+      <div class="searchbar">
+        <input id="driveSearchInput" placeholder="Ex. topographie, nivellement, terrassement, Lubersac...">
+        <select id="driveSearchSource"></select>
+        <button class="btn" onclick="searchDrive()">Rechercher</button>
+      </div>
+
+      <div id="driveSearchInfo" class="muted"></div>
+      <div id="driveSearchResults" style="margin-top:12px"></div>
     </div>
-  </section>
+
+    <div class="card span4">
+      <h3>Sources Drive</h3>
+      <p class="muted">Tu peux rechercher dans plusieurs dossiers ou Drives. BTS andy reste prioritaire.</p>
+      <div id="driveSources"></div>
+
+      <label>Nom de la source</label>
+      <input id="newSourceName" placeholder="Ex. Ancien BTS">
+      <label>ID dossier / Drive partagé</label>
+      <input id="newSourceId" placeholder="ID Google Drive">
+      <button class="btn secondary" style="margin-top:10px" onclick="addDriveSource()">Ajouter une source</button>
+
+      <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+      <label>OAuth Client ID Google</label>
+      <input id="oauthClientId" placeholder="xxxx.apps.googleusercontent.com">
+      <button class="btn" style="margin-top:10px" onclick="saveOAuthClient()">Enregistrer OAuth</button>
+      <p class="muted">Nécessaire pour que l’application hébergée sur GitHub Pages puisse rechercher dans tes fichiers privés.</p>
+    </div>
+  </div>
+</section>
+
 
   <section id="generator" class="view">
     <div class="grid">
@@ -255,31 +328,31 @@ th{color:var(--accent)}
 const DRIVE_DEFAULT_ID="0AJGPXCEfotQeUk9PVA";
 
 const year1Model=[
- {id:"y1-1",unit:"U5",title:"Lecture et analyse d’un dossier TP",hours:4,status:"done",competence:"C2-1",knowledge:"Analyse d’ouvrage",drive:0},
- {id:"y1-2",unit:"U8",title:"Topographie — prise en main et mise en station",hours:4,status:"done",competence:"C4-1",knowledge:"S3 Topographie",drive:0},
- {id:"y1-3",unit:"U6",title:"Préparation de chantier — découverte du DCE",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Méthodes / pièces marché",drive:3},
- {id:"y1-4",unit:"U5",title:"Terrassements et profils",hours:4,status:"done",competence:"C2-1",knowledge:"Terrassements",drive:0},
- {id:"y1-5",unit:"U8",title:"Laboratoire — identification des sols",hours:4,status:"done",competence:"C4-2",knowledge:"Sols / essais",drive:1},
- {id:"y1-6",unit:"U6",title:"Choix des engins et rendements",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Ressources et rendements",drive:3},
- {id:"y1-7",unit:"U5",title:"Chaussées — constitution et fonctions",hours:4,status:"done",competence:"C2-1",knowledge:"Chaussées",drive:0},
- {id:"y1-8",unit:"U8",title:"Nivellement — cheminement",hours:4,status:"done",competence:"C4-1",knowledge:"S3.7 Nivellement",drive:0},
- {id:"y1-9",unit:"U6",title:"Installation de chantier et organisation",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Organisation",drive:0},
- {id:"y1-10",unit:"U7",title:"Communication et encadrement d’équipe",hours:8,status:"done",competence:"Encadrer / communiquer",knowledge:"Management",drive:0}
+ {id:"y1-1",unit:"U5",title:"Lecture et analyse d’un dossier TP",topic:"dossier travaux publics",hours:4,status:"done",competence:"C2-1",knowledge:"Analyse d’ouvrage",drive:0},
+ {id:"y1-2",unit:"U8",title:"Topographie — prise en main et mise en station",topic:"topographie mise en station",hours:4,status:"done",competence:"C4-1",knowledge:"S3 Topographie",drive:0},
+ {id:"y1-3",unit:"U6",title:"Préparation de chantier — découverte du DCE",topic:"DCE préparation chantier",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Méthodes / pièces marché",drive:3},
+ {id:"y1-4",unit:"U5",title:"Terrassements et profils",topic:"terrassement profils",hours:4,status:"done",competence:"C2-1",knowledge:"Terrassements",drive:0},
+ {id:"y1-5",unit:"U8",title:"Laboratoire — identification des sols",topic:"laboratoire sols",hours:4,status:"done",competence:"C4-2",knowledge:"Sols / essais",drive:1},
+ {id:"y1-6",unit:"U6",title:"Choix des engins et rendements",topic:"engins rendements terrassement",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Ressources et rendements",drive:3},
+ {id:"y1-7",unit:"U5",title:"Chaussées — constitution et fonctions",topic:"chaussée",hours:4,status:"done",competence:"C2-1",knowledge:"Chaussées",drive:0},
+ {id:"y1-8",unit:"U8",title:"Nivellement — cheminement",topic:"topographie nivellement",hours:4,status:"done",competence:"C4-1",knowledge:"S3.7 Nivellement",drive:0},
+ {id:"y1-9",unit:"U6",title:"Installation de chantier et organisation",topic:"installation chantier",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Organisation",drive:0},
+ {id:"y1-10",unit:"U7",title:"Communication et encadrement d’équipe",topic:"management chantier",hours:8,status:"done",competence:"Encadrer / communiquer",knowledge:"Management",drive:0}
 ];
 
 const year2Model=[
- {id:"y2-1",unit:"U5",title:"Analyse de variantes techniques",hours:4,status:"todo",competence:"C2-2",knowledge:"Conception",drive:0},
- {id:"y2-2",unit:"U8",title:"Implantation d’un ouvrage",hours:4,status:"todo",competence:"C4-1",knowledge:"S3.10 Implantations",drive:0},
- {id:"y2-3",unit:"U6",title:"Projet chaussée Lubersac — méthodes",hours:8,status:"todo",competence:"Préparer un chantier",knowledge:"Méthodes / organisation",drive:3},
- {id:"y2-4",unit:"U5",title:"Dimensionnement / justification d’une solution",hours:4,status:"todo",competence:"C2-2",knowledge:"Conception",drive:0},
- {id:"y2-5",unit:"U8",title:"Contrôle de compactage et conformité",hours:4,status:"todo",competence:"C4-2",knowledge:"Contrôles",drive:1},
- {id:"y2-6",unit:"U6",title:"Projet Lubersac — planning et budget",hours:8,status:"todo",competence:"Préparer un chantier",knowledge:"S9 Planification",drive:3},
- {id:"y2-7",unit:"U7",title:"Pilotage d’équipe et réunion de chantier",hours:8,status:"todo",competence:"Encadrer un projet",knowledge:"Management",drive:0},
- {id:"y2-8",unit:"U8",title:"Récolement et contrôle final",hours:4,status:"todo",competence:"C4-2",knowledge:"Récolement",drive:0}
+ {id:"y2-1",unit:"U5",title:"Analyse de variantes techniques",topic:"variantes techniques",hours:4,status:"todo",competence:"C2-2",knowledge:"Conception",drive:0},
+ {id:"y2-2",unit:"U8",title:"Implantation d’un ouvrage",topic:"topographie implantation",hours:4,status:"todo",competence:"C4-1",knowledge:"S3.10 Implantations",drive:0},
+ {id:"y2-3",unit:"U6",title:"Projet chaussée Lubersac — méthodes",topic:"Lubersac chaussée",hours:8,status:"todo",competence:"Préparer un chantier",knowledge:"Méthodes / organisation",drive:3},
+ {id:"y2-4",unit:"U5",title:"Dimensionnement / justification d’une solution",topic:"dimensionnement",hours:4,status:"todo",competence:"C2-2",knowledge:"Conception",drive:0},
+ {id:"y2-5",unit:"U8",title:"Contrôle de compactage et conformité",topic:"laboratoire compactage",hours:4,status:"todo",competence:"C4-2",knowledge:"Contrôles",drive:1},
+ {id:"y2-6",unit:"U6",title:"Projet Lubersac — planning et budget",topic:"Lubersac planning budget",hours:8,status:"todo",competence:"Préparer un chantier",knowledge:"S9 Planification",drive:3},
+ {id:"y2-7",unit:"U7",title:"Pilotage d’équipe et réunion de chantier",topic:"management réunion chantier",hours:8,status:"todo",competence:"Encadrer un projet",knowledge:"Management",drive:0},
+ {id:"y2-8",unit:"U8",title:"Récolement et contrôle final",topic:"topographie récolement",hours:4,status:"todo",competence:"C4-2",knowledge:"Récolement",drive:0}
 ];
 
 const defaultData={
- settings:{cycleA:"PROMO_2026_2028",cycleAnchor:"2026-09-01",fridayDefault:"U6",driveFolderId:DRIVE_DEFAULT_ID,oauthClientId:""},
+ settings:{cycleA:"PROMO_2026_2028",cycleAnchor:"2026-09-01",fridayDefault:"U6",driveFolderId:DRIVE_DEFAULT_ID,oauthClientId:"",driveSources:[{name:"BTS andy",id:DRIVE_DEFAULT_ID,priority:1,enabled:true}]},
  resources:[
   {title:"Dossier BTS andy",type:"Dossier Drive",url:"https://drive.google.com/drive/folders/"+DRIVE_DEFAULT_ID,tags:["Drive"]},
   {title:"Procédures Laboratoire BTS TP",type:"PDF",url:"https://drive.google.com/file/d/13vgUZpEvCGhm8fJWnx33lYxGAX7ApNxf/view",tags:["U8","Laboratoire"]},
@@ -363,7 +436,7 @@ function renderHome(){
     <button class="btn" onclick="setStatus('${pk}','${currentYearKey(p)}','${s.id}','done')">✓ Réalisé</button>
     <button class="btn secondary" onclick="setStatus('${pk}','${currentYearKey(p)}','${s.id}','partial')">Partiel</button>
     <button class="btn ghost" onclick="setStatus('${pk}','${currentYearKey(p)}','${s.id}','todo')">Reporter</button>
-    <button class="btn secondary" onclick="openResource(${s.drive||0})">Drive</button>
+    <button class="btn secondary" onclick='openSessionResource(${JSON.stringify(s)})'>Ressource Drive</button>
    </div></div>`:`<p class="muted">Aucune séance ${unit} restante.</p>`;
  }else c.innerHTML=`<p class="muted">Pas de créneau fixe prévu aujourd’hui.</p>`;
  const pc=progressPct(y.sessions);
@@ -380,7 +453,7 @@ function renderWeek(){
  document.getElementById("weekSchedule").innerHTML=items.map(([day,u,h])=>{
   const s=nextSessionFor(u,pk);
   return `<div class="slot"><span class="tag">${u}</span><strong>${day} — ${h} h</strong><p>${s?s.title:"Aucune séance restante"}</p>
-   ${s?`<span class="muted">${s.competence} · ${s.knowledge}</span><div class="actions"><button class="btn secondary" onclick="openResource(${s.drive||0})">Drive</button><button class="btn secondary" onclick="openClassroom()">Classroom</button></div>`:""}</div>`;
+   ${s?`<span class="muted">${s.competence} · ${s.knowledge}</span><div class="actions"><button class="btn secondary" onclick='openSessionResource(${JSON.stringify(s)})'>Ressource Drive</button><button class="btn secondary" onclick="openClassroom()">Classroom</button></div>`:""}</div>`;
  }).join("");
 }
 
@@ -442,32 +515,279 @@ function cycleStatus(pk,yk,id){
  saveData(); renderAll();
 }
 
-function renderDrive(){
- document.getElementById("driveFolderId").value=data.settings.driveFolderId||DRIVE_DEFAULT_ID;
- document.getElementById("oauthClientId").value=data.settings.oauthClientId||"";
- document.getElementById("driveResources").innerHTML=data.resources.map((r,i)=>`<div class="resource"><div><strong>${r.title}</strong><br><span class="muted">${r.type} · ${r.tags.map(t=>"#"+t).join(" ")}</span></div><button class="btn secondary" onclick="openResource(${i})">Ouvrir</button></div>`).join("");
-}
-function openDrive(){window.open("https://drive.google.com/drive/folders/"+(data.settings.driveFolderId||DRIVE_DEFAULT_ID),"_blank")}
-function openClassroom(){window.open("https://classroom.google.com/","_blank")}
-function openResource(i){const r=data.resources[i];if(r)window.open(r.url,"_blank")}
 
-function resetDriveTarget(){
-  data.settings.driveFolderId="0AJGPXCEfotQeUk9PVA";
-  if(Array.isArray(data.resources) && data.resources.length){
-    data.resources[0].title="Dossier BTS andy";
-    data.resources[0].url="https://drive.google.com/drive/folders/0AJGPXCEfotQeUk9PVA";
+let googleAccessToken=null;
+let googleTokenClient=null;
+let driveIndexCache={};
+
+function ensureDriveSources(){
+  if(!data.settings.driveSources || !Array.isArray(data.settings.driveSources) || !data.settings.driveSources.length){
+    data.settings.driveSources=[{name:"BTS andy",id:DRIVE_DEFAULT_ID,priority:1,enabled:true}];
+    saveData();
   }
+  // Migration: force BTS andy as first source.
+  let main=data.settings.driveSources.find(s=>s.id===DRIVE_DEFAULT_ID);
+  if(!main){
+    data.settings.driveSources.unshift({name:"BTS andy",id:DRIVE_DEFAULT_ID,priority:1,enabled:true});
+    saveData();
+  }
+}
+function renderDrive(){
+  ensureDriveSources();
+  document.getElementById("oauthClientId").value=data.settings.oauthClientId||"";
+  renderDriveSources();
+  renderDriveSearchSources();
+  updateDriveConnectionUI();
+}
+function renderDriveSources(){
+  const wrap=document.getElementById("driveSources");
+  if(!wrap)return;
+  wrap.innerHTML=data.settings.driveSources.map((s,i)=>`
+    <div class="source-row">
+      <div><strong>${escapeHtml(s.name)}</strong><br><span class="muted">${escapeHtml(s.id)}</span></div>
+      <select onchange="setSourceEnabled(${i},this.value==='1')">
+        <option value="1" ${s.enabled!==false?"selected":""}>Active</option>
+        <option value="0" ${s.enabled===false?"selected":""}>Inactive</option>
+      </select>
+      ${i===0?'<span class="source-badge">Prioritaire</span>':`<button class="btn danger" onclick="removeDriveSource(${i})">×</button>`}
+    </div>`).join("");
+}
+function renderDriveSearchSources(){
+  const sel=document.getElementById("driveSearchSource");
+  if(!sel)return;
+  const active=data.settings.driveSources.filter(s=>s.enabled!==false);
+  sel.innerHTML=`<option value="ALL">Toutes les sources</option>`+active.map((s,i)=>`<option value="${escapeHtml(s.id)}">${escapeHtml(s.name)}</option>`).join("");
+}
+function addDriveSource(){
+  const name=document.getElementById("newSourceName").value.trim();
+  const id=document.getElementById("newSourceId").value.trim();
+  if(!name||!id){alert("Renseigne un nom et un ID.");return}
+  data.settings.driveSources.push({name,id,priority:data.settings.driveSources.length+1,enabled:true});
+  document.getElementById("newSourceName").value="";
+  document.getElementById("newSourceId").value="";
+  saveData();renderDrive();
+}
+function removeDriveSource(i){
+  if(i===0)return;
+  if(!confirm("Supprimer cette source de recherche ?"))return;
+  data.settings.driveSources.splice(i,1);saveData();renderDrive();
+}
+function setSourceEnabled(i,enabled){
+  data.settings.driveSources[i].enabled=enabled;saveData();renderDriveSearchSources();
+}
+function saveOAuthClient(){
+  data.settings.oauthClientId=document.getElementById("oauthClientId").value.trim();
   saveData();
-  renderDrive();
-  alert("Drive cible réinitialisé vers BTS andy.");
+  initGoogleIdentity();
+  alert("Client OAuth enregistré.");
 }
+function openDrive(){window.open("https://drive.google.com/drive/folders/"+DRIVE_DEFAULT_ID,"_blank")}
+function openClassroom(){window.open("https://classroom.google.com/","_blank")}
 
-function saveDriveSettings(){
- data.settings.driveFolderId=document.getElementById("driveFolderId").value.trim()||DRIVE_DEFAULT_ID;
- data.settings.oauthClientId=document.getElementById("oauthClientId").value.trim();
- saveData();renderDrive();alert("Paramètres Drive enregistrés.");
+function loadGoogleIdentityScript(){
+  return new Promise((resolve,reject)=>{
+    if(window.google?.accounts?.oauth2){resolve();return}
+    const existing=document.querySelector('script[data-gis="1"]');
+    if(existing){existing.addEventListener("load",resolve,{once:true});return}
+    const s=document.createElement("script");
+    s.src="https://accounts.google.com/gsi/client";
+    s.async=true;s.defer=true;s.dataset.gis="1";
+    s.onload=resolve;s.onerror=()=>reject(new Error("Impossible de charger Google Identity Services"));
+    document.head.appendChild(s);
+  });
 }
-
+async function initGoogleIdentity(){
+  if(!data.settings.oauthClientId)return false;
+  try{
+    await loadGoogleIdentityScript();
+    googleTokenClient=google.accounts.oauth2.initTokenClient({
+      client_id:data.settings.oauthClientId,
+      scope:"https://www.googleapis.com/auth/drive.readonly",
+      callback:(resp)=>{
+        if(resp.error){alert("Connexion Google refusée : "+resp.error);return}
+        googleAccessToken=resp.access_token;
+        sessionStorage.setItem("btstp_drive_token",googleAccessToken);
+        updateDriveConnectionUI();
+      }
+    });
+    return true;
+  }catch(e){console.error(e);return false}
+}
+async function connectGoogleDrive(){
+  if(!data.settings.oauthClientId){
+    alert("Ajoute d’abord ton OAuth Client ID Google dans la colonne de droite.");
+    return;
+  }
+  const ok=await initGoogleIdentity();
+  if(ok) googleTokenClient.requestAccessToken({prompt:"consent"});
+}
+function disconnectGoogleDrive(){
+  googleAccessToken=null;sessionStorage.removeItem("btstp_drive_token");driveIndexCache={};updateDriveConnectionUI();
+}
+function updateDriveConnectionUI(){
+  const dot=document.getElementById("driveDot"),txt=document.getElementById("driveStatusText");
+  if(!dot||!txt)return;
+  if(googleAccessToken){dot.classList.add("ok");txt.textContent="Connecté à Google Drive — recherche active";}
+  else{dot.classList.remove("ok");txt.textContent="Non connecté à Google Drive";}
+}
+function quickSearch(term){
+  document.getElementById("driveSearchInput").value=term;
+  searchDrive();
+}
+function escapeHtml(str){
+  return String(str??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+function escapeDriveQuery(str){
+  return String(str).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+}
+async function driveFetch(url){
+  if(!googleAccessToken) throw new Error("NOT_CONNECTED");
+  const r=await fetch(url,{headers:{Authorization:"Bearer "+googleAccessToken}});
+  if(r.status===401){googleAccessToken=null;sessionStorage.removeItem("btstp_drive_token");updateDriveConnectionUI();throw new Error("TOKEN_EXPIRED")}
+  if(!r.ok) throw new Error("DRIVE_"+r.status);
+  return r.json();
+}
+async function detectSourceType(source){
+  try{
+    await driveFetch(`https://www.googleapis.com/drive/v3/drives/${encodeURIComponent(source.id)}?fields=id,name`);
+    return "sharedDrive";
+  }catch(e){
+    if(["NOT_CONNECTED","TOKEN_EXPIRED"].includes(e.message))throw e;
+    return "folder";
+  }
+}
+async function searchSharedDrive(source,term){
+  const q=`trashed = false and name contains '${escapeDriveQuery(term)}'`;
+  let url=`https://www.googleapis.com/drive/v3/files?corpora=drive&driveId=${encodeURIComponent(source.id)}&includeItemsFromAllDrives=true&supportsAllDrives=true&pageSize=100&fields=nextPageToken,files(id,name,mimeType,webViewLink,parents,modifiedTime)&q=${encodeURIComponent(q)}`;
+  const out=[];
+  for(let pages=0;url&&pages<4;pages++){
+    const j=await driveFetch(url);
+    out.push(...(j.files||[]).map(f=>({...f,source:source.name,sourceId:source.id})));
+    url=j.nextPageToken?url.replace(/([?&])pageToken=[^&]*/,"").replace(/&$/,"")+`&pageToken=${encodeURIComponent(j.nextPageToken)}`:null;
+  }
+  return out;
+}
+async function listFolderChildren(folderId){
+  let url=`https://www.googleapis.com/drive/v3/files?includeItemsFromAllDrives=true&supportsAllDrives=true&pageSize=100&fields=nextPageToken,files(id,name,mimeType,webViewLink,parents,modifiedTime)&q=${encodeURIComponent(`'${escapeDriveQuery(folderId)}' in parents and trashed = false`)}`;
+  const out=[];
+  for(let pages=0;url&&pages<5;pages++){
+    const j=await driveFetch(url);out.push(...(j.files||[]));
+    url=j.nextPageToken?url+`&pageToken=${encodeURIComponent(j.nextPageToken)}`:null;
+  }
+  return out;
+}
+async function buildFolderIndex(source){
+  if(driveIndexCache[source.id])return driveIndexCache[source.id];
+  const queue=[{id:source.id,path:source.name}], indexed=[];
+  const seen=new Set();
+  while(queue.length && indexed.length<2500){
+    const cur=queue.shift();
+    if(seen.has(cur.id))continue;seen.add(cur.id);
+    let children=[];
+    try{children=await listFolderChildren(cur.id)}catch(e){console.warn(e);continue}
+    for(const f of children){
+      const item={...f,source:source.name,sourceId:source.id,path:cur.path};
+      indexed.push(item);
+      if(f.mimeType==="application/vnd.google-apps.folder"){
+        queue.push({id:f.id,path:cur.path+" / "+f.name});
+      }
+    }
+  }
+  driveIndexCache[source.id]=indexed;
+  return indexed;
+}
+async function searchFolderRecursive(source,term){
+  const idx=await buildFolderIndex(source);
+  const t=term.toLowerCase();
+  return idx.filter(f=>(f.name||"").toLowerCase().includes(t) || (f.path||"").toLowerCase().includes(t)).slice(0,150);
+}
+async function resolvePath(item){
+  if(item.path)return item.path+" / "+item.name;
+  return item.source+" / "+item.name;
+}
+function fileIcon(mime){
+  if(mime==="application/vnd.google-apps.folder")return "📁";
+  if((mime||"").includes("pdf"))return "📕";
+  if((mime||"").includes("presentation"))return "📊";
+  if((mime||"").includes("spreadsheet"))return "📈";
+  if((mime||"").includes("document")||(mime||"").includes("word"))return "📄";
+  return "📎";
+}
+async function searchDrive(){
+  const term=document.getElementById("driveSearchInput").value.trim();
+  if(!term){alert("Entre une matière ou un mot-clé.");return}
+  if(!googleAccessToken){
+    alert("Connecte d’abord l’application à Google Drive.");
+    return;
+  }
+  const chosen=document.getElementById("driveSearchSource").value;
+  let sources=data.settings.driveSources.filter(s=>s.enabled!==false);
+  if(chosen!=="ALL")sources=sources.filter(s=>s.id===chosen);
+  // Priority order: BTS andy first
+  sources.sort((a,b)=>(a.priority||99)-(b.priority||99));
+  document.getElementById("driveSearchInfo").textContent="Recherche en cours dans "+sources.map(s=>s.name).join(", ")+"…";
+  document.getElementById("driveSearchResults").innerHTML="";
+  let all=[];
+  for(const source of sources){
+    try{
+      const type=await detectSourceType(source);
+      const results=type==="sharedDrive"?await searchSharedDrive(source,term):await searchFolderRecursive(source,term);
+      all.push(...results.map(r=>({...r,sourceType:type})));
+    }catch(e){
+      console.error(e);
+      if(e.message==="TOKEN_EXPIRED"){alert("La session Google a expiré. Reconnecte-toi.");return}
+    }
+  }
+  // Ranking: priority source, exact starts/contains
+  const priorities=Object.fromEntries(data.settings.driveSources.map((s,i)=>[s.id,i]));
+  const tl=term.toLowerCase();
+  all.sort((a,b)=>{
+    const pa=priorities[a.sourceId]??99,pb=priorities[b.sourceId]??99;
+    if(pa!==pb)return pa-pb;
+    const an=(a.name||"").toLowerCase(),bn=(b.name||"").toLowerCase();
+    const sa=an===tl?0:an.startsWith(tl)?1:an.includes(tl)?2:3;
+    const sb=bn===tl?0:bn.startsWith(tl)?1:bn.includes(tl)?2:3;
+    return sa-sb||an.localeCompare(bn);
+  });
+  document.getElementById("driveSearchInfo").textContent=`${all.length} résultat(s) trouvé(s) pour « ${term} »`;
+  renderDriveResults(all.slice(0,100));
+}
+function renderDriveResults(results){
+  const wrap=document.getElementById("driveSearchResults");
+  if(!results.length){wrap.innerHTML=`<div class="result"><span class="muted">Aucun résultat dans les sources sélectionnées.</span></div>`;return}
+  window._lastDriveResults=results;
+  wrap.innerHTML=results.map((r,i)=>{
+    const url=r.webViewLink || (r.mimeType==="application/vnd.google-apps.folder"?`https://drive.google.com/drive/folders/${r.id}`:`https://drive.google.com/open?id=${r.id}`);
+    const p=r.path?`${r.path} / ${r.name}`:`${r.source} / ${r.name}`;
+    return `<div class="result">
+      <div class="result-top">
+        <div><strong>${fileIcon(r.mimeType)} ${escapeHtml(r.name)}</strong><div class="path">${escapeHtml(p)}</div></div>
+        <span class="source-badge">${escapeHtml(r.source)}</span>
+      </div>
+      <div class="actions">
+        <button class="btn secondary" onclick="window.open('${url.replace(/'/g,"\\'")}','_blank')">Ouvrir</button>
+        <button class="btn secondary" onclick="attachDriveResult(${i})">Associer à la prochaine séance</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+function attachDriveResult(i){
+  const r=window._lastDriveResults?.[i]; if(!r)return;
+  const pk=currentCfaPromotionKey(), p=data.promotions[pk], y=currentYear(p);
+  const unit=unitForDay(new Date().getDay())||"U5";
+  const s=y.sessions.find(x=>x.unit===unit&&x.status!=="done")||y.sessions.find(x=>x.status!=="done");
+  if(!s){alert("Aucune séance disponible.");return}
+  s.driveLink=r.webViewLink || (r.mimeType==="application/vnd.google-apps.folder"?`https://drive.google.com/drive/folders/${r.id}`:`https://drive.google.com/open?id=${r.id}`);
+  s.driveTitle=r.name;
+  s.driveSource=r.source;
+  saveData();renderAll();
+  alert(`Ressource « ${r.name} » associée à la séance « ${s.title} ».`);
+}
+function openSessionResource(s){
+  if(s.driveLink){window.open(s.driveLink,"_blank");return}
+  showView("drive");
+  document.getElementById("driveSearchInput").value=s.topic||s.title;
+}
 function syncGeneratorSelectors(){
  fillPromoSelect("genCohort");
  const current=currentCfaPromotionKey();
@@ -562,6 +882,7 @@ function importBackup(e){
 
 
 function migrateData() {
+  if(!data.settings.driveSources) data.settings.driveSources=[{name:"BTS andy",id:DRIVE_DEFAULT_ID,priority:1,enabled:true}];
   let changed=false;
   if(!data.settings) data.settings={};
   if(!data.settings.driveFolderId || data.settings.driveFolderId==="0AJGPXCEfotQeUk9PVA") {
@@ -584,7 +905,9 @@ function renderAll(){
  renderHome();renderWeek();renderPromotions();renderProgression();renderDrive();renderSettings();syncGeneratorSelectors();
 }
 migrateData();
+googleAccessToken=sessionStorage.getItem("btstp_drive_token")||null;
 renderAll();
+initGoogleIdentity();
 if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{})}
 </script>
 </body>

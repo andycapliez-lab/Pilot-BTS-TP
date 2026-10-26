@@ -1,9 +1,17 @@
 {
-  "name": "BTS TP Pilot V2.1",
-  "short_name": "BTS TP V2.1",
+  "name": "BTS TP Pilot V3",
+  "short_name": "BTS TP Pilot",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#16181a",
   "theme_color": "#16181a",
-  "description": "Assistant pédagogique BTS Travaux Publics sur 2 ans"
+  "description": "Assistant pédagogique BTS Travaux Publics avec recherche Google Drive multi-dossiers",
+  "icons": [
+    {
+      "src": "./logo-bts-tp-pilot.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
