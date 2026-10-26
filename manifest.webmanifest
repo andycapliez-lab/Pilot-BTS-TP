@@ -1,6 +1,6 @@
 {
-  "name": "BTS TP Pilot V2",
-  "short_name": "BTS TP Pilot",
+  "name": "BTS TP Pilot V2.1",
+  "short_name": "BTS TP V2.1",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#16181a",

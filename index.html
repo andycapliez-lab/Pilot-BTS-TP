@@ -168,6 +168,7 @@ th{color:var(--accent)}
         <label>OAuth Client ID Google</label>
         <input id="oauthClientId" placeholder="xxxx.apps.googleusercontent.com">
         <button class="btn" style="margin-top:12px" onclick="saveDriveSettings()">Enregistrer</button>
+        <button class="btn secondary" style="margin-top:8px" onclick="resetDriveTarget()">Réinitialiser vers BTS andy</button>
         <p class="muted">Le Client ID sera utile lorsque la PWA sera hébergée et que tu voudras une vraie synchronisation automatique.</p>
       </div>
     </div>
@@ -449,6 +450,18 @@ function renderDrive(){
 function openDrive(){window.open("https://drive.google.com/drive/folders/"+(data.settings.driveFolderId||DRIVE_DEFAULT_ID),"_blank")}
 function openClassroom(){window.open("https://classroom.google.com/","_blank")}
 function openResource(i){const r=data.resources[i];if(r)window.open(r.url,"_blank")}
+
+function resetDriveTarget(){
+  data.settings.driveFolderId="0AJGPXCEfotQeUk9PVA";
+  if(Array.isArray(data.resources) && data.resources.length){
+    data.resources[0].title="Dossier BTS andy";
+    data.resources[0].url="https://drive.google.com/drive/folders/0AJGPXCEfotQeUk9PVA";
+  }
+  saveData();
+  renderDrive();
+  alert("Drive cible réinitialisé vers BTS andy.");
+}
+
 function saveDriveSettings(){
  data.settings.driveFolderId=document.getElementById("driveFolderId").value.trim()||DRIVE_DEFAULT_ID;
  data.settings.oauthClientId=document.getElementById("oauthClientId").value.trim();
@@ -547,9 +560,30 @@ function importBackup(e){
  const r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);saveData();renderAll();alert("Sauvegarde importée.");}catch{alert("Fichier invalide.");}};r.readAsText(f);
 }
 
+
+function migrateData() {
+  let changed=false;
+  if(!data.settings) data.settings={};
+  if(!data.settings.driveFolderId || data.settings.driveFolderId==="0AJGPXCEfotQeUk9PVA") {
+    data.settings.driveFolderId="0AJGPXCEfotQeUk9PVA";
+    changed=true;
+  }
+  if(Array.isArray(data.resources)) {
+    data.resources.forEach(r=>{
+      if(typeof r.url==="string" && r.url.includes("0AJGPXCEfotQeUk9PVA")) {
+        r.url=r.url.replace("0AJGPXCEfotQeUk9PVA","0AJGPXCEfotQeUk9PVA");
+        if(r.title==="Dossier BTS") r.title="Dossier BTS andy";
+        changed=true;
+      }
+    });
+  }
+  if(changed) saveData();
+}
+
 function renderAll(){
  renderHome();renderWeek();renderPromotions();renderProgression();renderDrive();renderSettings();syncGeneratorSelectors();
 }
+migrateData();
 renderAll();
 if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{})}
 </script>
