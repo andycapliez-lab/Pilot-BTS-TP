@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17191b">
+<title>BTS TP Pilot V2</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{
+  --bg:#16181a;--panel:#23272a;--panel2:#2e3337;--line:#3a4044;
+  --txt:#f5f7f8;--muted:#aeb5ba;--accent:#dfff00;--danger:#ff6b6b;--ok:#9ee493;--warn:#ffd166;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}
+.app{max-width:1200px;margin:auto;padding:16px 16px 92px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+h1,h2,h3{margin-top:0}
+.brand h1{margin-bottom:4px}
+.accent{color:var(--accent)}
+.muted{color:var(--muted)}
+.pill{background:var(--accent);color:#111;padding:8px 12px;border-radius:999px;font-weight:900}
+.tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+.tab{border:1px solid var(--line);background:var(--panel);color:var(--txt);padding:11px;border-radius:12px;cursor:pointer}
+.tab.active{background:var(--accent);color:#111;font-weight:900}
+.view{display:none}.view.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+.span4{grid-column:span 4}.span5{grid-column:span 5}.span6{grid-column:span 6}.span7{grid-column:span 7}.span8{grid-column:span 8}.span12{grid-column:span 12}
+.progress{height:10px;background:#0f1112;border-radius:999px;overflow:hidden}
+.progress span{display:block;height:100%;background:var(--accent)}
+.metric{font-size:34px;font-weight:900}
+.slot{padding:14px;background:var(--panel2);border-left:5px solid var(--accent);border-radius:12px;margin-bottom:10px}
+.tag{display:inline-block;padding:4px 7px;border-radius:999px;background:#111315;border:1px solid var(--line);font-size:12px;margin-right:5px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{border:0;border-radius:10px;padding:10px 13px;cursor:pointer;font-weight:800;background:var(--accent);color:#111}
+.btn.secondary{background:var(--panel2);color:var(--txt);border:1px solid var(--line)}
+.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+.btn.danger{background:var(--danger);color:#111}
+input,select,textarea{width:100%;background:#111315;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px}
+label{display:block;margin:10px 0 5px;color:var(--muted);font-size:13px}
+textarea{min-height:280px;resize:vertical}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--accent)}
+.notice{background:#111315;border:1px solid #505700;border-radius:14px;padding:13px;color:#eef7b0}
+.status.done{color:var(--ok);font-weight:800}.status.partial{color:var(--warn);font-weight:800}.status.todo{color:var(--muted);font-weight:800}
+.yearcard{padding:14px;border:1px solid var(--line);border-radius:14px;background:#1c1f21;margin-bottom:10px}
+.yearcard.active{border-color:var(--accent)}
+.resource{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.footerbar{position:fixed;bottom:0;left:0;right:0;background:rgba(22,24,26,.95);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px}
+.footerbar .inner{max-width:1200px;margin:auto;display:flex;justify-content:space-between}
+@media(max-width:900px){
+  .tabs{grid-template-columns:repeat(3,1fr)}
+  .span4,.span5,.span6,.span7,.span8{grid-column:span 12}
+  .top{align-items:flex-start;flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand">
+      <h1>BTS TP <span class="accent">PILOT V2</span></h1>
+      <div class="muted">Assistant pédagogique sur 2 ans — promotions, progression, Drive, Classroom</div>
+    </div>
+    <div id="cohortPill" class="pill">Chargement…</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-view="home">Aujourd’hui</button>
+    <button class="tab" data-view="week">Semaine</button>
+    <button class="tab" data-view="promotions">Promotions</button>
+    <button class="tab" data-view="progression">Progression</button>
+    <button class="tab" data-view="drive">Drive</button>
+    <button class="tab" data-view="generator">Générer</button>
+    <button class="tab" data-view="settings">Paramètres</button>
+  </div>
+
+  <section id="home" class="view active">
+    <div class="grid">
+      <div class="card span8">
+        <h2 id="todayTitle">Aujourd’hui</h2>
+        <div id="todayContent"></div>
+      </div>
+      <div class="card span4">
+        <h3>Avancement année en cours</h3>
+        <div class="metric" id="currentYearProgress">0%</div>
+        <div class="progress"><span id="currentYearBar" style="width:0%"></span></div>
+        <p class="muted" id="currentYearLabel"></p>
+      </div>
+      <div class="card span6">
+        <h3>À préparer</h3>
+        <div id="prepList"></div>
+      </div>
+      <div class="card span6">
+        <h3>Actions rapides</h3>
+        <div class="actions">
+          <button class="btn" onclick="showView('week')">Préparer ma semaine</button>
+          <button class="btn secondary" onclick="showView('promotions')">Voir les 2 années</button>
+          <button class="btn secondary" onclick="openDrive()">Drive BTS Andy</button>
+          <button class="btn secondary" onclick="openClassroom()">Classroom</button>
+          <button class="btn secondary" onclick="showView('generator')">Générer progression</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="week" class="view">
+    <div class="card">
+      <h2>Semaine CFA</h2>
+      <p class="muted">Mardi U5 · Jeudi U8 · Vendredi U6 par défaut, échangeable avec U7.</p>
+      <div id="weekSchedule"></div>
+    </div>
+  </section>
+
+  <section id="promotions" class="view">
+    <div class="grid">
+      <div class="card span5">
+        <h2>Promotions</h2>
+        <div id="promotionList"></div>
+      </div>
+      <div class="card span7">
+        <h2>Parcours sur 2 ans</h2>
+        <div id="promotionDetails"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="progression" class="view">
+    <div class="grid">
+      <div class="card span8">
+        <h2>Progression détaillée</h2>
+        <label>Promotion</label>
+        <select id="progressCohort" onchange="renderProgression()"></select>
+        <label>Année</label>
+        <select id="progressYear" onchange="renderProgression()">
+          <option value="year1">1re année</option>
+          <option value="year2">2e année</option>
+        </select>
+        <div id="progressTableWrap"></div>
+      </div>
+      <div class="card span4">
+        <h3>Couverture par unité</h3>
+        <div id="unitBars"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="drive" class="view">
+    <div class="grid">
+      <div class="card span8">
+        <h2>Drive BTS Andy</h2>
+        <div class="notice">
+          Dossier principal préconfiguré : <strong>BTS</strong>. Le prototype conserve les liens vers les ressources et ouvre directement le bon dossier.
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="openDrive()">Ouvrir Drive BTS</button>
+          <button class="btn secondary" onclick="openClassroom()">Ouvrir Classroom</button>
+        </div>
+        <div id="driveResources" style="margin-top:14px"></div>
+      </div>
+      <div class="card span4">
+        <h3>Connexion Drive</h3>
+        <label>ID du dossier BTS</label>
+        <input id="driveFolderId">
+        <label>OAuth Client ID Google</label>
+        <input id="oauthClientId" placeholder="xxxx.apps.googleusercontent.com">
+        <button class="btn" style="margin-top:12px" onclick="saveDriveSettings()">Enregistrer</button>
+        <p class="muted">Le Client ID sera utile lorsque la PWA sera hébergée et que tu voudras une vraie synchronisation automatique.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="generator" class="view">
+    <div class="grid">
+      <div class="card span4">
+        <h2>Générer une progression</h2>
+        <label>Promotion</label>
+        <select id="genCohort"></select>
+        <label>Période</label>
+        <select id="genPeriod">
+          <option value="twoYears">Deux années complètes</option>
+          <option value="year1">1re année seulement</option>
+          <option value="year2">2e année seulement</option>
+        </select>
+        <label>Contenu</label>
+        <select id="genFormat">
+          <option value="complete">Progression complète</option>
+          <option value="inspection">Synthèse inspection</option>
+          <option value="realisee">Réalisée uniquement</option>
+        </select>
+        <label>Filtrer par unité</label>
+        <select id="genUnit">
+          <option value="ALL">Toutes les unités</option>
+          <option>U5</option><option>U6</option><option>U7</option><option>U8</option>
+        </select>
+        <div class="actions">
+          <button class="btn" onclick="generateProgression()">Générer</button>
+          <button class="btn secondary" onclick="copyGenerated()">Copier pour Word</button>
+        </div>
+      </div>
+      <div class="card span8">
+        <h2>Document généré</h2>
+        <textarea id="generatedText"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section id="settings" class="view">
+    <div class="grid">
+      <div class="card span6">
+        <h2>Alternance</h2>
+        <label>Promotion au CFA pendant la quinzaine A</label>
+        <select id="cycleA"></select>
+        <label>Date de référence d’une quinzaine A</label>
+        <input id="cycleAnchor" type="date">
+        <label>Vendredi par défaut</label>
+        <select id="fridayDefault">
+          <option value="U6">U6 — journée complète</option>
+          <option value="U7">U7 — journée complète</option>
+        </select>
+        <button class="btn" style="margin-top:12px" onclick="saveSettings()">Enregistrer</button>
+      </div>
+      <div class="card span6">
+        <h2>Sauvegarde</h2>
+        <p class="muted">Les données restent dans le navigateur. Exporte une sauvegarde régulièrement.</p>
+        <div class="actions">
+          <button class="btn secondary" onclick="exportBackup()">Exporter JSON</button>
+          <label class="btn secondary" style="margin:0;cursor:pointer">Importer JSON
+            <input type="file" accept=".json" style="display:none" onchange="importBackup(event)">
+          </label>
+        </div>
+      </div>
+      <div class="card span12">
+        <h2>Fin de cycle</h2>
+        <p>La clôture archive les deux années complètes de la promotion. Rien n’est perdu : la progression reste générable à tout moment depuis les archives.</p>
+        <label>Promotion à clôturer</label>
+        <select id="archiveCohort"></select>
+        <div class="actions">
+          <button class="btn" onclick="archivePromotion()">Clôturer et archiver</button>
+          <button class="btn danger" onclick="hardResetPromotion()">Effacer le suivi sans archive</button>
+        </div>
+        <div id="archiveInfo" class="muted" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="footerbar"><div class="inner"><span id="saveState" class="muted">Sauvegarde locale active</span><strong class="accent">BTS TP PILOT</strong></div></div>
+
+<script>
+const DRIVE_DEFAULT_ID="1MLEFNCTX5mZebrLPa126reTZ2aG3lLpW";
+
+const year1Model=[
+ {id:"y1-1",unit:"U5",title:"Lecture et analyse d’un dossier TP",hours:4,status:"done",competence:"C2-1",knowledge:"Analyse d’ouvrage",drive:0},
+ {id:"y1-2",unit:"U8",title:"Topographie — prise en main et mise en station",hours:4,status:"done",competence:"C4-1",knowledge:"S3 Topographie",drive:0},
+ {id:"y1-3",unit:"U6",title:"Préparation de chantier — découverte du DCE",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Méthodes / pièces marché",drive:3},
+ {id:"y1-4",unit:"U5",title:"Terrassements et profils",hours:4,status:"done",competence:"C2-1",knowledge:"Terrassements",drive:0},
+ {id:"y1-5",unit:"U8",title:"Laboratoire — identification des sols",hours:4,status:"done",competence:"C4-2",knowledge:"Sols / essais",drive:1},
+ {id:"y1-6",unit:"U6",title:"Choix des engins et rendements",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Ressources et rendements",drive:3},
+ {id:"y1-7",unit:"U5",title:"Chaussées — constitution et fonctions",hours:4,status:"done",competence:"C2-1",knowledge:"Chaussées",drive:0},
+ {id:"y1-8",unit:"U8",title:"Nivellement — cheminement",hours:4,status:"done",competence:"C4-1",knowledge:"S3.7 Nivellement",drive:0},
+ {id:"y1-9",unit:"U6",title:"Installation de chantier et organisation",hours:8,status:"done",competence:"Préparer un chantier",knowledge:"Organisation",drive:0},
+ {id:"y1-10",unit:"U7",title:"Communication et encadrement d’équipe",hours:8,status:"done",competence:"Encadrer / communiquer",knowledge:"Management",drive:0}
+];
+
+const year2Model=[
+ {id:"y2-1",unit:"U5",title:"Analyse de variantes techniques",hours:4,status:"todo",competence:"C2-2",knowledge:"Conception",drive:0},
+ {id:"y2-2",unit:"U8",title:"Implantation d’un ouvrage",hours:4,status:"todo",competence:"C4-1",knowledge:"S3.10 Implantations",drive:0},
+ {id:"y2-3",unit:"U6",title:"Projet chaussée Lubersac — méthodes",hours:8,status:"todo",competence:"Préparer un chantier",knowledge:"Méthodes / organisation",drive:3},
+ {id:"y2-4",unit:"U5",title:"Dimensionnement / justification d’une solution",hours:4,status:"todo",competence:"C2-2",knowledge:"Conception",drive:0},
+ {id:"y2-5",unit:"U8",title:"Contrôle de compactage et conformité",hours:4,status:"todo",competence:"C4-2",knowledge:"Contrôles",drive:1},
+ {id:"y2-6",unit:"U6",title:"Projet Lubersac — planning et budget",hours:8,status:"todo",competence:"Préparer un chantier",knowledge:"S9 Planification",drive:3},
+ {id:"y2-7",unit:"U7",title:"Pilotage d’équipe et réunion de chantier",hours:8,status:"todo",competence:"Encadrer un projet",knowledge:"Management",drive:0},
+ {id:"y2-8",unit:"U8",title:"Récolement et contrôle final",hours:4,status:"todo",competence:"C4-2",knowledge:"Récolement",drive:0}
+];
+
+const defaultData={
+ settings:{cycleA:"PROMO_2026_2028",cycleAnchor:"2026-09-01",fridayDefault:"U6",driveFolderId:DRIVE_DEFAULT_ID,oauthClientId:""},
+ resources:[
+  {title:"Dossier BTS",type:"Dossier Drive",url:"https://drive.google.com/drive/folders/"+DRIVE_DEFAULT_ID,tags:["Drive"]},
+  {title:"Procédures Laboratoire BTS TP",type:"PDF",url:"https://drive.google.com/file/d/13vgUZpEvCGhm8fJWnx33lYxGAX7ApNxf/view",tags:["U8","Laboratoire"]},
+  {title:"Plan annuel BTS TP Chantier CFA",type:"Présentation",url:"https://docs.google.com/presentation/d/1AmEpoMms0tInJPyPOD5q7v_y4m8-fFCi/edit",tags:["Planification"]},
+  {title:"Sujet U6 Lubersac chaussée",type:"Dossier Drive",url:"https://drive.google.com/drive/folders/1FXjzL_2JxzY0Jc_28l3Givmb3QW3QnKu",tags:["U6","Projet"]}
+ ],
+ promotions:{
+  PROMO_2026_2028:{
+    label:"Promotion 2026-2028",
+    currentLevel:1,
+    year1:{label:"1re année 2026-2027",status:"in_progress",sessions:structuredClone(year1Model).map((s,i)=>({...s,status:i<4?"done":i==4?"partial":"todo"}))},
+    year2:{label:"2e année 2027-2028",status:"future",sessions:structuredClone(year2Model)}
+  },
+  PROMO_2025_2027:{
+    label:"Promotion 2025-2027",
+    currentLevel:2,
+    year1:{label:"1re année 2025-2026",status:"completed",sessions:structuredClone(year1Model)},
+    year2:{label:"2e année 2026-2027",status:"in_progress",sessions:structuredClone(year2Model).map((s,i)=>({...s,status:i<2?"done":i==2?"partial":"todo"}))}
+  }
+ },
+ archives:[]
+};
+
+let data=loadData();
+let selectedPromotion="PROMO_2025_2027";
+
+function loadData(){
+ const raw=localStorage.getItem("btstp_pilot_v2");
+ if(!raw) return structuredClone(defaultData);
+ try{return JSON.parse(raw)}catch{return structuredClone(defaultData)}
+}
+function saveData(){
+ localStorage.setItem("btstp_pilot_v2",JSON.stringify(data));
+ const e=document.getElementById("saveState"); if(e)e.textContent="Sauvegardé à "+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+}
+
+function showView(id){
+ document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ const tab=[...document.querySelectorAll(".tab")].find(t=>t.dataset.view===id); if(tab)tab.classList.add("active");
+ if(id==="generator") syncGeneratorSelectors();
+}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>showView(t.dataset.view));
+
+function promoKeys(){return Object.keys(data.promotions)}
+function currentCfaPromotionKey(){
+ const keys=promoKeys(); if(keys.length<2)return keys[0];
+ const anchor=new Date(data.settings.cycleAnchor+"T12:00:00");
+ const days=Math.floor((new Date()-anchor)/(1000*60*60*24));
+ const block=Math.floor(days/14);
+ const a=data.settings.cycleA;
+ const b=keys.find(k=>k!==a)||a;
+ return (((block%2)+2)%2===0)?a:b;
+}
+function currentPromotion(){return data.promotions[currentCfaPromotionKey()]}
+function currentYearKey(p){return p.currentLevel===1?"year1":"year2"}
+function currentYear(p){return p[currentYearKey(p)]}
+function unitForDay(day){if(day===2)return"U5";if(day===4)return"U8";if(day===5)return data.settings.fridayDefault;return null}
+function nextSessionFor(unit,promoKey=currentCfaPromotionKey()){
+ const p=data.promotions[promoKey], y=currentYear(p);
+ return y.sessions.find(s=>s.unit===unit&&s.status!=="done")||null;
+}
+function progressPct(sessions){
+ if(!sessions.length)return 0; let pts=0;
+ sessions.forEach(s=>pts+=s.status==="done"?1:s.status==="partial"?.5:0);
+ return Math.round(pts/sessions.length*100);
+}
+function statusLabel(s){return s==="done"?"Réalisé":s==="partial"?"Partiel":"À faire"}
+
+function renderHome(){
+ const pk=currentCfaPromotionKey(), p=data.promotions[pk], y=currentYear(p), unit=unitForDay(new Date().getDay());
+ document.getElementById("cohortPill").textContent=p.label+" au CFA";
+ document.getElementById("todayTitle").textContent=new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"}).replace(/^./,x=>x.toUpperCase());
+ const c=document.getElementById("todayContent");
+ if(unit){
+  const s=nextSessionFor(unit,pk);
+  c.innerHTML=s?`<div class="slot"><span class="tag">${unit}</span><strong>${s.title}</strong>
+   <p>${s.hours} h · ${s.competence} · ${s.knowledge}</p>
+   <div class="actions">
+    <button class="btn" onclick="setStatus('${pk}','${currentYearKey(p)}','${s.id}','done')">✓ Réalisé</button>
+    <button class="btn secondary" onclick="setStatus('${pk}','${currentYearKey(p)}','${s.id}','partial')">Partiel</button>
+    <button class="btn ghost" onclick="setStatus('${pk}','${currentYearKey(p)}','${s.id}','todo')">Reporter</button>
+    <button class="btn secondary" onclick="openResource(${s.drive||0})">Drive</button>
+   </div></div>`:`<p class="muted">Aucune séance ${unit} restante.</p>`;
+ }else c.innerHTML=`<p class="muted">Pas de créneau fixe prévu aujourd’hui.</p>`;
+ const pc=progressPct(y.sessions);
+ document.getElementById("currentYearProgress").textContent=pc+"%";
+ document.getElementById("currentYearBar").style.width=pc+"%";
+ document.getElementById("currentYearLabel").textContent=y.label;
+ const upcoming=["U5","U8",data.settings.fridayDefault].map(u=>nextSessionFor(u,pk)).filter(Boolean);
+ document.getElementById("prepList").innerHTML=upcoming.map(s=>`<p>☐ <strong>${s.unit}</strong> — ${s.title}<br><span class="muted">${s.hours} h · vérifier support, sujet élève et Classroom</span></p>`).join("")||"<p class='muted'>Rien à préparer.</p>";
+}
+
+function renderWeek(){
+ const pk=currentCfaPromotionKey();
+ const items=[["Mardi après-midi","U5",4],["Jeudi après-midi","U8",4],["Vendredi journée",data.settings.fridayDefault,8]];
+ document.getElementById("weekSchedule").innerHTML=items.map(([day,u,h])=>{
+  const s=nextSessionFor(u,pk);
+  return `<div class="slot"><span class="tag">${u}</span><strong>${day} — ${h} h</strong><p>${s?s.title:"Aucune séance restante"}</p>
+   ${s?`<span class="muted">${s.competence} · ${s.knowledge}</span><div class="actions"><button class="btn secondary" onclick="openResource(${s.drive||0})">Drive</button><button class="btn secondary" onclick="openClassroom()">Classroom</button></div>`:""}</div>`;
+ }).join("");
+}
+
+function renderPromotions(){
+ const keys=promoKeys();
+ document.getElementById("promotionList").innerHTML=keys.map(k=>{
+  const p=data.promotions[k], active=k===selectedPromotion;
+  return `<div class="yearcard ${active?"active":""}" onclick="selectedPromotion='${k}';renderPromotions()" style="cursor:pointer">
+   <strong>${p.label}</strong><br><span class="muted">${p.currentLevel===1?"Actuellement en 1re année":"Actuellement en 2e année"}</span>
+  </div>`;
+ }).join("")+
+ data.archives.map((a,i)=>`<div class="yearcard"><strong>Archive — ${a.label}</strong><br><span class="muted">Clôturée le ${new Date(a.archivedAt).toLocaleDateString("fr-FR")}</span><div class="actions"><button class="btn secondary" onclick="loadArchive(${i})">Voir</button></div></div>`).join("");
+ const p=data.promotions[selectedPromotion];
+ if(!p){document.getElementById("promotionDetails").innerHTML="<p class='muted'>Sélectionne une promotion.</p>";return}
+ document.getElementById("promotionDetails").innerHTML=["year1","year2"].map(y=>{
+  const yy=p[y], pc=progressPct(yy.sessions);
+  return `<div class="yearcard ${currentYearKey(p)===y?"active":""}">
+   <strong>${yy.label}</strong> — ${yy.status==="completed"?"Terminée":yy.status==="future"?"À venir":"En cours"}
+   <div class="progress" style="margin:8px 0"><span style="width:${pc}%"></span></div>
+   <span>${pc}%</span>
+   <div class="actions"><button class="btn secondary" onclick="openPromotionYear('${selectedPromotion}','${y}')">Voir la progression</button></div>
+  </div>`;
+ }).join("");
+}
+
+function openPromotionYear(pk,yk){
+ document.getElementById("progressCohort").value=pk;
+ document.getElementById("progressYear").value=yk;
+ renderProgression(); showView("progression");
+}
+
+function fillPromoSelect(id){
+ const el=document.getElementById(id); if(!el)return;
+ const old=el.value;
+ el.innerHTML=promoKeys().map(k=>`<option value="${k}">${data.promotions[k].label}</option>`).join("");
+ if(old&&data.promotions[old])el.value=old;
+}
+function renderProgression(){
+ fillPromoSelect("progressCohort");
+ const pk=document.getElementById("progressCohort").value||promoKeys()[0];
+ const yk=document.getElementById("progressYear").value;
+ const ss=data.promotions[pk][yk].sessions;
+ document.getElementById("progressTableWrap").innerHTML=`<table><thead><tr><th>Unité</th><th>Séquence</th><th>Durée</th><th>État</th><th>Action</th></tr></thead><tbody>
+ ${ss.map(s=>`<tr><td>${s.unit}</td><td><strong>${s.title}</strong><br><span class="muted">${s.competence} · ${s.knowledge}</span></td><td>${s.hours} h</td><td class="status ${s.status}">${statusLabel(s.status)}</td>
+ <td><button class="btn secondary" onclick="cycleStatus('${pk}','${yk}','${s.id}')">Changer</button></td></tr>`).join("")}</tbody></table>`;
+ document.getElementById("unitBars").innerHTML=["U5","U6","U7","U8"].map(u=>{
+  const xs=ss.filter(s=>s.unit===u), pc=progressPct(xs);
+  return `<p><strong>${u}</strong> — ${pc}%</p><div class="progress"><span style="width:${pc}%"></span></div>`;
+ }).join("");
+}
+
+function setStatus(pk,yk,id,status){
+ const s=data.promotions[pk][yk].sessions.find(x=>x.id===id); if(s)s.status=status;
+ saveData(); renderAll();
+}
+function cycleStatus(pk,yk,id){
+ const s=data.promotions[pk][yk].sessions.find(x=>x.id===id); if(!s)return;
+ s.status=s.status==="todo"?"partial":s.status==="partial"?"done":"todo";
+ saveData(); renderAll();
+}
+
+function renderDrive(){
+ document.getElementById("driveFolderId").value=data.settings.driveFolderId||DRIVE_DEFAULT_ID;
+ document.getElementById("oauthClientId").value=data.settings.oauthClientId||"";
+ document.getElementById("driveResources").innerHTML=data.resources.map((r,i)=>`<div class="resource"><div><strong>${r.title}</strong><br><span class="muted">${r.type} · ${r.tags.map(t=>"#"+t).join(" ")}</span></div><button class="btn secondary" onclick="openResource(${i})">Ouvrir</button></div>`).join("");
+}
+function openDrive(){window.open("https://drive.google.com/drive/folders/"+(data.settings.driveFolderId||DRIVE_DEFAULT_ID),"_blank")}
+function openClassroom(){window.open("https://classroom.google.com/","_blank")}
+function openResource(i){const r=data.resources[i];if(r)window.open(r.url,"_blank")}
+function saveDriveSettings(){
+ data.settings.driveFolderId=document.getElementById("driveFolderId").value.trim()||DRIVE_DEFAULT_ID;
+ data.settings.oauthClientId=document.getElementById("oauthClientId").value.trim();
+ saveData();renderDrive();alert("Paramètres Drive enregistrés.");
+}
+
+function syncGeneratorSelectors(){
+ fillPromoSelect("genCohort");
+ const current=currentCfaPromotionKey();
+ if(document.getElementById("genCohort"))document.getElementById("genCohort").value=current;
+}
+function generateProgression(){
+ const pk=document.getElementById("genCohort").value;
+ const period=document.getElementById("genPeriod").value;
+ const format=document.getElementById("genFormat").value;
+ const unit=document.getElementById("genUnit").value;
+ const p=data.promotions[pk];
+ let yearKeys=period==="twoYears"?["year1","year2"]:[period];
+ let out=`PROGRESSION PÉDAGOGIQUE — ${p.label}\n`;
+ out+=`Parcours complet BTS Travaux Publics sur 2 ans\n`;
+ out+=`Organisation CFA : mardi 4 h U5 · jeudi 4 h U8 · vendredi 8 h ${data.settings.fridayDefault} par défaut, avec alternance ponctuelle U7.\n`;
+ out+=`Rythme : 15 jours CFA / 15 jours entreprise, en alternance avec l’autre promotion.\n\n`;
+ if(format==="inspection"){
+  out+=`PRINCIPES PÉDAGOGIQUES\n`;
+  out+=`La progression est conçue sur deux années et articule les unités U5, U6, U7 et U8. Les séquences s’appuient sur des situations professionnelles, des projets, des activités de topographie et de laboratoire. Les ressources sont conservées dans Google Drive et diffusées aux étudiants via Google Classroom.\n\n`;
+ }
+ yearKeys.forEach(yk=>{
+  const yy=p[yk];
+  let ss=yy.sessions.filter(s=>unit==="ALL"||s.unit===unit);
+  if(format==="realisee")ss=ss.filter(s=>s.status==="done"||s.status==="partial");
+  out+=`${yy.label.toUpperCase()}\n`;
+  out+=`Unité | Séquence / thème | Compétence | Savoirs associés | Durée | État\n`;
+  out+=`------|-------------------|------------|------------------|-------|-----\n`;
+  ss.forEach(s=>out+=`${s.unit} | ${s.title} | ${s.competence} | ${s.knowledge} | ${s.hours} h | ${statusLabel(s.status)}\n`);
+  out+=`\n`;
+ });
+ out+=`SYNTHÈSE DE COUVERTURE\n`;
+ ["U5","U6","U7","U8"].forEach(u=>{
+  const all=yearKeys.flatMap(yk=>p[yk].sessions).filter(s=>s.unit===u);
+  out+=`${u} : ${progressPct(all)}%\n`;
+ });
+ document.getElementById("generatedText").value=out;
+}
+async function copyGenerated(){
+ if(!document.getElementById("generatedText").value)generateProgression();
+ await navigator.clipboard.writeText(document.getElementById("generatedText").value);
+ alert("Progression copiée pour Word.");
+}
+
+function renderSettings(){
+ fillPromoSelect("cycleA"); fillPromoSelect("archiveCohort");
+ document.getElementById("cycleA").value=data.settings.cycleA;
+ document.getElementById("cycleAnchor").value=data.settings.cycleAnchor;
+ document.getElementById("fridayDefault").value=data.settings.fridayDefault;
+ document.getElementById("archiveInfo").textContent=data.archives.length?`${data.archives.length} promotion(s) archivée(s).`:"Aucune promotion archivée.";
+}
+function saveSettings(){
+ data.settings.cycleA=document.getElementById("cycleA").value;
+ data.settings.cycleAnchor=document.getElementById("cycleAnchor").value;
+ data.settings.fridayDefault=document.getElementById("fridayDefault").value;
+ saveData();renderAll();alert("Paramètres enregistrés.");
+}
+function archivePromotion(){
+ const pk=document.getElementById("archiveCohort").value, p=data.promotions[pk];
+ if(!confirm(`Clôturer ${p.label} et archiver ses deux années complètes ?`))return;
+ data.archives.push({label:p.label,archivedAt:new Date().toISOString(),promotion:structuredClone(p)});
+ delete data.promotions[pk];
+ if(data.settings.cycleA===pk)data.settings.cycleA=promoKeys()[0]||"";
+ if(selectedPromotion===pk)selectedPromotion=promoKeys()[0]||"";
+ saveData();renderAll();alert("Promotion archivée. Sa progression reste disponible dans les archives.");
+}
+function hardResetPromotion(){
+ const pk=document.getElementById("archiveCohort").value, p=data.promotions[pk];
+ if(!confirm(`Remettre à zéro le suivi de ${p.label} sans créer d’archive ?`))return;
+ if(!confirm("Confirmer une seconde fois."))return;
+ ["year1","year2"].forEach(yk=>p[yk].sessions.forEach(s=>s.status="todo"));
+ saveData();renderAll();alert("Suivi remis à zéro.");
+}
+function loadArchive(i){
+ const a=data.archives[i];
+ let out=`ARCHIVE — ${a.label}\nClôturée le ${new Date(a.archivedAt).toLocaleDateString("fr-FR")}\n\n`;
+ ["year1","year2"].forEach(yk=>{
+  out+=a.promotion[yk].label.toUpperCase()+"\n";
+  a.promotion[yk].sessions.forEach(s=>out+=`${s.unit} | ${s.title} | ${statusLabel(s.status)}\n`);
+  out+="\n";
+ });
+ document.getElementById("generatedText").value=out; showView("generator");
+}
+
+function exportBackup(){
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bts-tp-pilot-v2-sauvegarde.json";a.click();URL.revokeObjectURL(a.href);
+}
+function importBackup(e){
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();r.onload=()=>{try{data=JSON.parse(r.result);saveData();renderAll();alert("Sauvegarde importée.");}catch{alert("Fichier invalide.");}};r.readAsText(f);
+}
+
+function renderAll(){
+ renderHome();renderWeek();renderPromotions();renderProgression();renderDrive();renderSettings();syncGeneratorSelectors();
+}
+renderAll();
+if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{})}
+</script>
+</body>
+</html>

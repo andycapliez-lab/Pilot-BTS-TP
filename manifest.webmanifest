@@ -1,0 +1,9 @@
+{
+  "name": "BTS TP Pilot V2",
+  "short_name": "BTS TP Pilot",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#16181a",
+  "theme_color": "#16181a",
+  "description": "Assistant pédagogique BTS Travaux Publics sur 2 ans"
+}
