@@ -25,3 +25,12 @@ Remplacer les fichiers du dépôt par :
 - logo-bts-tp-pilot.png
 
 L’application conserve les données dans localStorage. Export JSON conseillé régulièrement.
+
+
+## V4.1 — calendrier manuel
+- onglet Calendrier CFA
+- correction manuelle d’une semaine
+- choix : BTS 1, BTS 2, vacances, entreprise, semaine exceptionnelle
+- les corrections manuelles sont prioritaires sur l’alternance automatique
+- suppression d’une correction en un clic
+- inversion de l’alternance à partir d’une date
