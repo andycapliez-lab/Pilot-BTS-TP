@@ -16,8 +16,8 @@ Cette version ajoute la logique complète sur 2 ans.
 - Sauvegarde locale + export/import JSON.
 
 ## Drive préconfiguré
-Dossier BTS :
-1MLEFNCTX5mZebrLPa126reTZ2aG3lLpW
+Dossier BTS andy :
+0AJGPXCEfotQeUk9PVA
 
 ## Déploiement
 Déposer `index.html`, `manifest.webmanifest` et `sw.js` sur GitHub Pages.

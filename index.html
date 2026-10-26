@@ -99,7 +99,7 @@ th{color:var(--accent)}
         <div class="actions">
           <button class="btn" onclick="showView('week')">Préparer ma semaine</button>
           <button class="btn secondary" onclick="showView('promotions')">Voir les 2 années</button>
-          <button class="btn secondary" onclick="openDrive()">Drive BTS Andy</button>
+          <button class="btn secondary" onclick="openDrive()">Drive BTS andy</button>
           <button class="btn secondary" onclick="openClassroom()">Classroom</button>
           <button class="btn secondary" onclick="showView('generator')">Générer progression</button>
         </div>
@@ -151,12 +151,12 @@ th{color:var(--accent)}
   <section id="drive" class="view">
     <div class="grid">
       <div class="card span8">
-        <h2>Drive BTS Andy</h2>
+        <h2>Drive BTS andy</h2>
         <div class="notice">
-          Dossier principal préconfiguré : <strong>BTS</strong>. Le prototype conserve les liens vers les ressources et ouvre directement le bon dossier.
+          Dossier principal préconfiguré : <strong>BTS andy</strong>. Le prototype conserve les liens vers les ressources et ouvre directement le bon dossier.
         </div>
         <div class="actions">
-          <button class="btn" onclick="openDrive()">Ouvrir Drive BTS</button>
+          <button class="btn" onclick="openDrive()">Ouvrir Drive BTS andy</button>
           <button class="btn secondary" onclick="openClassroom()">Ouvrir Classroom</button>
         </div>
         <div id="driveResources" style="margin-top:14px"></div>
@@ -251,7 +251,7 @@ th{color:var(--accent)}
 <div class="footerbar"><div class="inner"><span id="saveState" class="muted">Sauvegarde locale active</span><strong class="accent">BTS TP PILOT</strong></div></div>
 
 <script>
-const DRIVE_DEFAULT_ID="1MLEFNCTX5mZebrLPa126reTZ2aG3lLpW";
+const DRIVE_DEFAULT_ID="0AJGPXCEfotQeUk9PVA";
 
 const year1Model=[
  {id:"y1-1",unit:"U5",title:"Lecture et analyse d’un dossier TP",hours:4,status:"done",competence:"C2-1",knowledge:"Analyse d’ouvrage",drive:0},
@@ -280,7 +280,7 @@ const year2Model=[
 const defaultData={
  settings:{cycleA:"PROMO_2026_2028",cycleAnchor:"2026-09-01",fridayDefault:"U6",driveFolderId:DRIVE_DEFAULT_ID,oauthClientId:""},
  resources:[
-  {title:"Dossier BTS",type:"Dossier Drive",url:"https://drive.google.com/drive/folders/"+DRIVE_DEFAULT_ID,tags:["Drive"]},
+  {title:"Dossier BTS andy",type:"Dossier Drive",url:"https://drive.google.com/drive/folders/"+DRIVE_DEFAULT_ID,tags:["Drive"]},
   {title:"Procédures Laboratoire BTS TP",type:"PDF",url:"https://drive.google.com/file/d/13vgUZpEvCGhm8fJWnx33lYxGAX7ApNxf/view",tags:["U8","Laboratoire"]},
   {title:"Plan annuel BTS TP Chantier CFA",type:"Présentation",url:"https://docs.google.com/presentation/d/1AmEpoMms0tInJPyPOD5q7v_y4m8-fFCi/edit",tags:["Planification"]},
   {title:"Sujet U6 Lubersac chaussée",type:"Dossier Drive",url:"https://drive.google.com/drive/folders/1FXjzL_2JxzY0Jc_28l3Givmb3QW3QnKu",tags:["U6","Projet"]}
